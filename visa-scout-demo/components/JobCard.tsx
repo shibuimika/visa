@@ -1,6 +1,6 @@
 import type { Job } from '@/lib/mockData';
 import type { ScoredJob } from '@/lib/fakeApi';
-import { formatRelative, formatSalaryRange } from '@/lib/format';
+import { formatSalaryRange } from '@/lib/format';
 import Tag from '@/components/Tag';
 import MetaRow from '@/components/MetaRow';
 
@@ -20,6 +20,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
               {job.companyLogo ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={job.companyLogo} alt={job.company} className="w-10 h-10 rounded-lg object-contain bg-white p-1 border" />
               ) : (
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
@@ -106,7 +107,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
             <div className="text-sm text-gray-700"><span className="text-gray-500">応募者数:</span> {job.applicantCount}</div>
           )}
         </div>
-        <MetaRow postedDate={job.postedDate} lastUpdated={job.lastUpdated} applicantCount={(job as any).applicantCount} status={job.status as any} />
+        <MetaRow postedDate={job.postedDate} lastUpdated={job.lastUpdated} applicantCount={job.applicantCount} status={job.status} />
 
         {job.summary && (
           <p className="text-sm text-gray-700 leading-relaxed mb-4">{job.summary}</p>

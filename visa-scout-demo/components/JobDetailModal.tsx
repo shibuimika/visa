@@ -44,6 +44,7 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
         <div className="flex items-start justify-between p-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
             {job.companyLogo ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={job.companyLogo} alt={job.company} className="w-10 h-10 rounded-lg object-contain bg-white p-1 border" />
             ) : (
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg" />
