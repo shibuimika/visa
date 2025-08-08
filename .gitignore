@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+
+# Dependencies
+**/node_modules/
+
+# Next.js
+**/.next/
+**/out/
+
+# Env
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+**/dist/
+**/coverage/
+
+# Tools
+.vercel/
+.turbo/
+
