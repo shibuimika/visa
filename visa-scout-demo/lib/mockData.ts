@@ -2,7 +2,7 @@ export type VisaKind =
   | '留学'
   | '技術・人文知識・国際業務'
   | '家族滞在'
-  | '配偶者'
+  | '日本人の配偶者等'
   | '経営・管理';
 
 export type JLPT = 'N1' | 'N2' | 'N3' | 'N4' | 'N5' | '未取得';
@@ -86,7 +86,7 @@ export const jobs: Job[] = [
     company: 'Globex',
     salary: 400,
     jlpt: 'N1',
-    visaKind: '配偶者',
+    visaKind: '日本人の配偶者等',
     location: '神奈川県横浜市',
     employmentType: '契約社員',
     benefits: ['交通費全額支給'],
@@ -190,7 +190,7 @@ export const jobs: Job[] = [
     company: 'Wayne Corp',
     salary: 420,
     jlpt: 'N1',
-    visaKind: '配偶者',
+    visaKind: '日本人の配偶者等',
     location: '東京都中央区',
     employmentType: '正社員',
     description: '見積作成、受発注、請求処理、CRMの更新、営業資料の整備。',
@@ -216,7 +216,7 @@ export const jobs: Job[] = [
     company: 'Stark Industries',
     salary: 430,
     jlpt: 'N1',
-    visaKind: '配偶者',
+    visaKind: '日本人の配偶者等',
     location: '東京都品川区',
     employmentType: '正社員',
     description: 'メール・電話での問い合わせ対応、ナレッジベース整備、エスカレーション対応。',
@@ -439,7 +439,7 @@ export const jobs: Job[] = [
     company: 'Initrode',
     salary: 380,
     jlpt: 'N2',
-    visaKind: '配偶者',
+    visaKind: '日本人の配偶者等',
     location: '東京都新宿区',
     employmentType: '契約社員',
     description: '資料作成、スケジュール調整、データ入力、電話対応。',
@@ -564,9 +564,17 @@ export const jobs: Job[] = [
 export type Application = {
   name: string;
   nationality: string;
+  birthDate: string; // YYYY-MM-DD
+  gender?: string;
+  passportNumber?: string;
+  passportExpiry?: string; // YYYY-MM-DD
   visaKind: VisaKind;
   expiryDate: string; // YYYY-MM-DD
   jlpt: JLPT;
+  // 動的フィールド用
+  dynamicFields?: Record<string, string>;
+  // 企業担当者メール
+  companyContactEmail?: string;
 };
 
 
