@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ensure readable text color for form controls */
+input:not(:disabled),
+select:not(:disabled),
+textarea:not(:disabled) {
+  /* Tailwind gray-900 */
+  color: rgb(17 24 39);
+}
+
+/* Make placeholder text visible but subdued */
+input::placeholder,
+textarea::placeholder {
+  /* Tailwind gray-500 */
+  color: rgb(107 114 128);
+  opacity: 1; /* Safari/iOS で薄くなりすぎるのを防止 */
+}
