@@ -256,7 +256,15 @@ export type TranslationKey =
   | 'applicants_label'
   | 'status_label'
   | 'status_open'
-  | 'status_closed';
+  | 'status_closed'
+  
+  // JLPTレベル
+  | 'jlpt_n1'
+  | 'jlpt_n2'
+  | 'jlpt_n3'
+  | 'jlpt_n4'
+  | 'jlpt_n5'
+  | 'jlpt_none';
 
 // 翻訳辞書
 export const translations: Record<Language, Record<TranslationKey, string>> = {
@@ -396,7 +404,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
 
     // 求人カード
     japanese_level: '日本語レベル',
-    visa_type_label: '在留資格',
     location: '勤務地',
     remote: 'リモート',
     employment_type: '雇用形態',
@@ -432,9 +439,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     close_button: '閉じる',
 
     // MetaRow
-    posted_label: '掲載:',
-    updated_label: '更新:',
-    applicants_label: '応募者数:',
     status_label: '状態:',
     status_open: '募集中',
     status_closed: '募集終了',
@@ -443,6 +447,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     language_ja: '日本語',
     language_en: 'English',
     language_zh: '中文',
+
+    // JLPTレベル
+    jlpt_n1: 'N1',
+    jlpt_n2: 'N2',
+    jlpt_n3: 'N3',
+    jlpt_n4: 'N4',
+    jlpt_n5: 'N5',
+    jlpt_none: '未取得',
 
     // VISAフォームの動的フィールド名
     field_所属機関名: '所属機関名',
@@ -654,7 +666,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
 
     // 求人カード
     japanese_level: 'Japanese Level',
-    visa_type_label: 'Visa Type',
     location: 'Location',
     remote: 'Remote',
     employment_type: 'Employment Type',
@@ -690,9 +701,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     close_button: 'Close',
 
     // MetaRow
-    posted_label: 'Posted:',
-    updated_label: 'Updated:',
-    applicants_label: 'Applicants:',
     status_label: 'Status:',
     status_open: 'Open',
     status_closed: 'Closed',
@@ -702,41 +710,49 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     language_en: 'English',
     language_zh: '中文',
 
+    // JLPTレベル
+    jlpt_n1: 'N1',
+    jlpt_n2: 'N2',
+    jlpt_n3: 'N3',
+    jlpt_n4: 'N4',
+    jlpt_n5: 'N5',
+    jlpt_none: 'Not obtained',
+
     // VISAフォームの動的フィールド名
     field_所属機関名: 'Company/Organization Name',
-    field_所在地: '所在地',
-    field_雇用形態: '雇用形態',
-    field_職務内容: '職務内容',
-    field_就労場所: '就労場所',
-    field_予定年収: '予定年収',
-    field_労働時間: '労働時間',
-    field_最終学歴: '最終学歴',
-    field_関連職務年数: '関連職務年数',
-    field_会社名: '会社名',
-    field_事業所所在地: '事業所所在地',
-    'field_資本金/出資総額': '資本金/出資総額',
-    field_常勤職員数: '常勤職員数',
-    field_法人番号: '法人番号',
-    field_事業概要: '事業概要',
-    field_事業開始状況: '事業開始状況',
-    field_学校名: '学校名',
-    'field_学部学科/課程': '学部学科/課程',
-    'field_在籍区分（正規/研究生等）': '在籍区分（正規/研究生等）',
-    field_在学期間: '在学期間',
-    'field_奨学金の有無': '奨学金の有無',
-    'field_配偶者氏名（日本人）': '配偶者氏名（日本人）',
-    field_婚姻日: '婚姻日',
-    field_同居状況: '同居状況',
-    field_扶養者氏名: '扶養者氏名',
-    'field_扶養者の在留資格/期間': '扶養者の在留資格/期間',
-    'field_扶養者の勤務先/収入': '扶養者の勤務先/収入',
-    field_同居予定住所: '同居予定住所',
+    field_所在地: 'Location',
+    field_雇用形態: 'Employment Type',
+    field_職務内容: 'Job Description',
+    field_就労場所: 'Work Location',
+    field_予定年収: 'Expected Annual Salary',
+    field_労働時間: 'Working Hours',
+    field_最終学歴: 'Highest Education',
+    field_関連職務年数: 'Years of Relevant Experience',
+    field_会社名: 'Company Name',
+    field_事業所所在地: 'Office Location',
+    'field_資本金/出資総額': 'Capital/Investment Amount',
+    field_常勤職員数: 'Number of Full-time Employees',
+    field_法人番号: 'Corporate Number',
+    field_事業概要: 'Business Overview',
+    field_事業開始状況: 'Business Start Status',
+    field_学校名: 'School Name',
+    'field_学部学科/課程': 'Faculty/Department/Course',
+    'field_在籍区分（正規/研究生等）': 'Enrollment Status (Regular/Research Student, etc.)',
+    field_在学期間: 'Study Period',
+    'field_奨学金の有無': 'Scholarship Status',
+    'field_配偶者氏名（日本人）': 'Spouse Name (Japanese National)',
+    field_婚姻日: 'Marriage Date',
+    field_同居状況: 'Living Situation',
+    field_扶養者氏名: 'Supporter Name',
+    'field_扶養者の在留資格/期間': 'Supporter\'s Visa Status/Period',
+    'field_扶養者の勤務先/収入': 'Supporter\'s Workplace/Income',
+    field_同居予定住所: 'Planned Address for Living Together',
 
     // VISAフォームの固定ラベル
-    passport_number_label: 'パスポート番号（任意）',
-    passport_expiry_label: 'パスポート有効期限（任意）',
-    company_contact_label: '所属企業担当者メール（任意）',
-    demo_saved_message: '申請内容を保存しました（デモ）',
+    passport_number_label: 'Passport Number (Optional)',
+    passport_expiry_label: 'Passport Expiry Date (Optional)',
+    company_contact_label: 'Company Contact Email (Optional)',
+    demo_saved_message: 'Application saved successfully (Demo)',
 
     // プレースホルダー
     placeholder_year_income: 'e.g., Annual Salary (in 10,000 yen)',
@@ -912,7 +928,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
 
     // 求人カード
     japanese_level: '日语水平',
-    visa_type_label: '在留资格',
     location: '工作地点',
     remote: '远程',
     employment_type: '雇用形态',
@@ -948,9 +963,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     close_button: '关闭',
 
     // MetaRow
-    posted_label: '发布:',
-    updated_label: '更新:',
-    applicants_label: '申请人数:',
     status_label: '状态:',
     status_open: '正在招聘',
     status_closed: '招聘结束',
@@ -959,6 +971,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     language_ja: '日本語',
     language_en: 'English',
     language_zh: '中文',
+
+    // JLPTレベル
+    jlpt_n1: 'N1',
+    jlpt_n2: 'N2',
+    jlpt_n3: 'N3',
+    jlpt_n4: 'N4',
+    jlpt_n5: 'N5',
+    jlpt_none: '未获得',
 
     // VISAフォームの動的フィールド名
     field_所属機関名: '所属机构名称',

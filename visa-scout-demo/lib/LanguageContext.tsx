@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Language, loadLanguage, saveLanguage, DEFAULT_LANGUAGE } from './i18n';
+import { Language, loadLanguage, saveLanguage, DEFAULT_LANGUAGE, TranslationKey, translations } from './i18n';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (key: string) => string;
+  t: (key: TranslationKey) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -27,21 +27,8 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     saveLanguage(newLanguage);
   };
 
-  const t = (key: string): string => {
-    // 動的なインポートを避けるため、直接translationsを参照
-    const translations = {
-      ja: () => import('./i18n').then(m => m.translations.ja[key as any] || key),
-      en: () => import('./i18n').then(m => m.translations.en[key as any] || key),
-      zh: () => import('./i18n').then(m => m.translations.zh[key as any] || key),
-    };
-
-    // 同期的に現在の言語の翻訳を返す
-    try {
-      const translationModule = require('./i18n');
-      return translationModule.translations[language]?.[key as any] || key;
-    } catch {
-      return key;
-    }
+  const t = (key: TranslationKey): string => {
+    return translations[language]?.[key] || key;
   };
 
   return (

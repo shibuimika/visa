@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Application, JLPT, VisaKind } from '@/lib/mockData';
+import type { TranslationKey } from '@/lib/i18n';
 import { submitVisaApplication } from '@/lib/fakeApi';
 import { ALL_COUNTRY_CODES } from '@/lib/countries';
 import Toast from '@/components/Toast';
@@ -360,11 +361,13 @@ export default function VisaForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
               >
-                {jlptLevels.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
+                <option value="" disabled>{t('select_jlpt')}</option>
+                <option value="N1">{t('jlpt_n1')}</option>
+                <option value="N2">{t('jlpt_n2')}</option>
+                <option value="N3">{t('jlpt_n3')}</option>
+                <option value="N4">{t('jlpt_n4')}</option>
+                <option value="N5">{t('jlpt_n5')}</option>
+                <option value="未取得">{t('jlpt_none')}</option>
               </select>
             </div>
           </div>
@@ -441,7 +444,7 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <input
@@ -474,7 +477,7 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
                         </label>
                         <input
                           list={`suggest_${field}`}
@@ -502,7 +505,7 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <select
@@ -511,7 +514,7 @@ export default function VisaForm() {
                             onChange={handleChange}
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                           >
-                            <option value="" disabled>カテゴリを選択</option>
+                            <option value="" disabled>{t('select_category')}</option>
                             <option value="エンジニア">{t('job_category_engineer')}</option>
                             <option value="データ">{t('job_category_data')}</option>
                             <option value="デザイン">{t('job_category_design')}</option>
@@ -540,7 +543,7 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
                         </label>
                         <select
                           name={`dynamic_${field}`}
@@ -563,7 +566,7 @@ export default function VisaForm() {
                         <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
-                        {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
+                        {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
                       </label>
 
                       {SELECT_OPTIONS[field] ? (
