@@ -4,6 +4,7 @@ import { submitVisaApplication } from '@/lib/fakeApi';
 import { ALL_COUNTRY_CODES } from '@/lib/countries';
 import Toast from '@/components/Toast';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/LanguageContext';
 
 const visaKinds: VisaKind[] = ['留学', '技術・人文知識・国際業務', '家族滞在', '日本人の配偶者等', '経営・管理'];
 const jlptLevels: JLPT[] = ['N1', 'N2', 'N3', 'N4', 'N5', '未取得'];
@@ -36,6 +37,7 @@ const VISA_FIELDS: Record<VisaKind, string[]> = {
 };
 
 export default function VisaForm() {
+  const { t } = useLanguage();
   const [form, setForm] = useState<Application>({
     name: '',
     nationality: '',
@@ -140,7 +142,7 @@ export default function VisaForm() {
         
         const res = await submitVisaApplication(form);
         setLastId(res.id);
-        setToast('申請内容を保存しました（デモ）');
+        setToast(t('demo_saved_message'));
       } finally {
         setLoading(false);
       }
@@ -161,8 +163,8 @@ export default function VisaForm() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">VISA申請フォーム</h2>
-            <p className="text-gray-600 text-sm">必要な情報を入力してVISA申請を行います</p>
+            <h2 className="text-2xl font-bold text-gray-900">{t('visa_form_title')}</h2>
+            <p className="text-gray-600 text-sm">{t('visa_form_subtitle')}</p>
           </div>
         </div>
       </div>
@@ -177,7 +179,7 @@ export default function VisaForm() {
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
               </svg>
-              基本情報
+              {t('basic_info')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -185,13 +187,13 @@ export default function VisaForm() {
                   <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
-                  氏名 <span className="text-red-500">*</span>
+                  {t('name')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   name="name"
                   value={form.name}
                   onChange={handleChange}
-                  placeholder="例）山田 太郎"
+                  placeholder={t('placeholder_name')}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
@@ -200,7 +202,7 @@ export default function VisaForm() {
                   <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h6a2 2 0 012 2v4m-3 0V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"/>
                   </svg>
-                  生年月日 <span className="text-red-500">*</span>
+                  {t('birth_date')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -220,7 +222,7 @@ export default function VisaForm() {
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/>
                 </svg>
-                国籍 <span className="text-red-500">*</span>
+                {t('nationality')} <span className="text-red-500">*</span>
               </label>
               <select
                 name="nationality"
@@ -228,7 +230,7 @@ export default function VisaForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
               >
-                <option value="" disabled>国を選択</option>
+                <option value="" disabled>{t('select_country')}</option>
                 {countries.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -239,7 +241,7 @@ export default function VisaForm() {
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10m0 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8m6 0V6"/>
                 </svg>
-                性別（任意）
+                {t('gender')}
               </label>
               <select
                 name="gender"
@@ -247,11 +249,11 @@ export default function VisaForm() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
               >
-                <option value="">未選択</option>
-                <option value="男性">男性</option>
-                <option value="女性">女性</option>
-                <option value="その他">その他</option>
-                <option value="回答しない">回答しない</option>
+                <option value="">{t('select_gender')}</option>
+                <option value="male">{t('male')}</option>
+                <option value="female">{t('female')}</option>
+                <option value="other">{t('other')}</option>
+                <option value="prefer_not_say">{t('prefer_not_say')}</option>
               </select>
             </div>
           </div>
@@ -263,13 +265,13 @@ export default function VisaForm() {
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h6a2 2 0 012 2v4m-3 0V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"/>
                 </svg>
-                パスポート番号（任意）
+{t('passport_number_label')}
               </label>
               <input
                 name="passportNumber"
                 value={form.passportNumber}
                 onChange={handleChange}
-                placeholder="例）TR1234567"
+                placeholder={t('placeholder_passport')}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
@@ -278,7 +280,7 @@ export default function VisaForm() {
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h6a2 2 0 012 2v4m-3 0V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"/>
                 </svg>
-                パスポート有効期限（任意）
+{t('passport_expiry_label')}
               </label>
               <input
                 type="date"
@@ -296,7 +298,7 @@ export default function VisaForm() {
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
               </svg>
-              在留資格情報
+              {t('visa_info')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -304,7 +306,7 @@ export default function VisaForm() {
                   <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
-                  在留資格
+                  {t('visa_type')}
                 </label>
                 <select
                   name="visaKind"
@@ -312,11 +314,11 @@ export default function VisaForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                 >
-                  {visaKinds.map((v) => (
-                    <option key={v} value={v}>
-                      {v}
-                    </option>
-                  ))}
+                  <option value="留学">{t('visa_type_student')}</option>
+                <option value="技術・人文知識・国際業務">{t('visa_type_work')}</option>
+                <option value="家族滞在">{t('visa_type_family')}</option>
+                <option value="日本人の配偶者等">{t('visa_type_spouse')}</option>
+                <option value="経営・管理">{t('visa_type_business')}</option>
                 </select>
               </div>
               <div className="space-y-2">
@@ -324,7 +326,7 @@ export default function VisaForm() {
                   <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h6a2 2 0 012 2v4m-3 0V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2z"/>
                   </svg>
-                  在留期限 <span className="text-red-500">*</span>
+                  {t('visa_expiry')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -343,14 +345,14 @@ export default function VisaForm() {
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10m0 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8m6 0V6"/>
               </svg>
-              語学スキル
+              {t('language_skills')}
             </h3>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10m0 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8m6 0V6"/>
                 </svg>
-                日本語レベル（JLPT）
+                {t('jlpt_level')}
               </label>
               <select
                 name="jlpt"
@@ -374,24 +376,59 @@ export default function VisaForm() {
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                 </svg>
-                会社／学校情報（VISA別）
+                {t('company_school_info')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {VISA_FIELDS[form.visaKind].map((field) => {
+                  // フィールド名を翻訳キーに対応させる
+                  const getFieldTranslationKey = (fieldName: string): string => {
+                    const keyMap: Record<string, string> = {
+                      '所属機関名': 'field_所属機関名',
+                      '所在地': 'field_所在地',
+                      '雇用形態': 'field_雇用形態',
+                      '職務内容': 'field_職務内容',
+                      '就労場所': 'field_就労場所',
+                      '予定年収': 'field_予定年収',
+                      '労働時間': 'field_労働時間',
+                      '最終学歴': 'field_最終学歴',
+                      '関連職務年数': 'field_関連職務年数',
+                      '会社名': 'field_会社名',
+                      '事業所所在地': 'field_事業所所在地',
+                      '資本金/出資総額': 'field_資本金_出資総額',
+                      '常勤職員数': 'field_常勤職員数',
+                      '法人番号': 'field_法人番号',
+                      '事業概要': 'field_事業概要',
+                      '事業開始状況': 'field_事業開始状況',
+                      '学校名': 'field_学校名',
+                      '学部学科/課程': 'field_学部学科_課程',
+                      '在籍区分（正規/研究生等）': 'field_在籍区分（正規/研究生等）',
+                      '在学期間': 'field_在学期間',
+                      '奨学金の有無': 'field_奨学金の有無',
+                      '配偶者氏名（日本人）': 'field_配偶者氏名（日本人）',
+                      '婚姻日': 'field_婚姻日',
+                      '同居状況': 'field_同居状況',
+                      '扶養者氏名': 'field_扶養者氏名',
+                      '扶養者の在留資格/期間': 'field_扶養者の在留資格_期間',
+                      '扶養者の勤務先/収入': 'field_扶養者の勤務先_収入',
+                      '同居予定住所': 'field_同居予定住所'
+                    };
+                    return keyMap[fieldName] || fieldName;
+                  };
+
                   // セレクト候補
                   const SELECT_OPTIONS: Record<string, string[]> = {
-                    '雇用形態': ['正社員', '契約社員', 'アルバイト', '派遣', '業務委託'],
-                    '在籍区分（正規/研究生等）': ['正規', '研究生', '交換留学生', '聴講生'],
-                    '奨学金の有無': ['あり', 'なし'],
-                    '同居状況': ['同居', '別居'],
-                    '労働時間': ['フルタイム', 'パートタイム', 'シフト'],
-                    '最終学歴': ['高校', '短大', '学士', '修士', '博士']
+                    '雇用形態': [t('option_fulltime'), t('option_contract'), t('option_parttime'), t('option_dispatch'), t('option_freelance')],
+                    '在籍区分（正規/研究生等）': [t('option_regular'), t('option_researcher'), t('option_exchange'), t('option_auditor')],
+                    '奨学金の有無': [t('option_yes'), t('option_no')],
+                    '同居状況': [t('option_together'), t('option_separate')],
+                    '労働時間': [t('option_fulltime_work'), t('option_parttime_work'), t('option_shift_work')],
+                    '最終学歴': [t('option_highschool'), t('option_college'), t('option_bachelor'), t('option_master'), t('option_phd')]
                   };
                   const NUMBER_HINTS: Record<string, { min?: number; max?: number; step?: number; placeholder?: string }> = {
-                    '予定年収': { min: 100, max: 2000, step: 10, placeholder: '例）年収（万円）' },
-                    '常勤職員数': { min: 1, max: 100000, step: 1, placeholder: '例）50' },
-                    '資本金/出資総額': { min: 1, max: 100000000, step: 1, placeholder: '例）資本金（万円）' },
-                    '関連職務年数': { min: 0, max: 50, step: 1, placeholder: '例）5' }
+                    '予定年収': { min: 100, max: 2000, step: 10, placeholder: t('placeholder_year_income') },
+                    '常勤職員数': { min: 1, max: 100000, step: 1, placeholder: t('placeholder_employee_count') },
+                    '資本金/出資総額': { min: 1, max: 100000000, step: 1, placeholder: t('placeholder_capital') },
+                    '関連職務年数': { min: 0, max: 50, step: 1, placeholder: t('placeholder_work_experience') }
                   };
                   const DATE_FIELDS = new Set<string>(['婚姻日']);
                   const PREF_FIELDS = new Set<string>(['所在地', '就労場所']);
@@ -404,7 +441,7 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {field} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <input
@@ -437,14 +474,14 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {field} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
                         </label>
                         <input
                           list={`suggest_${field}`}
                           name={`dynamic_${field}`}
                           value={form.dynamicFields?.[field] || ''}
                           onChange={handleChange}
-                          placeholder={`例）${SUGGEST[0]}`}
+                          placeholder={t('placeholder_company_email')}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         />
                         <datalist id={`suggest_${field}`}>
@@ -465,7 +502,7 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {field} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <select
@@ -475,15 +512,19 @@ export default function VisaForm() {
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                           >
                             <option value="" disabled>カテゴリを選択</option>
-                            {CATEGORIES.map((c) => (
-                              <option key={c} value={c}>{c}</option>
-                            ))}
+                            <option value="エンジニア">{t('job_category_engineer')}</option>
+                            <option value="データ">{t('job_category_data')}</option>
+                            <option value="デザイン">{t('job_category_design')}</option>
+                            <option value="プロダクトマネジメント">{t('job_category_product')}</option>
+                            <option value="営業">{t('job_category_sales')}</option>
+                            <option value="バックオフィス">{t('job_category_backoffice')}</option>
+                            <option value="カスタマーサポート">{t('job_category_support')}</option>
                           </select>
                           <input
                             name={`dynamic_職務内容（詳細）`}
                             value={form.dynamicFields?.['職務内容（詳細）'] || ''}
                             onChange={handleChange}
-                            placeholder="例）フロントエンド開発、API連携、UI改善など"
+                            placeholder={t('placeholder_job_description')}
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           />
                         </div>
@@ -499,7 +540,7 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {field} <span className="text-red-500">*</span>
+                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
                         </label>
                         <select
                           name={`dynamic_${field}`}
@@ -507,7 +548,7 @@ export default function VisaForm() {
                           onChange={handleChange}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                         >
-                          <option value="" disabled>都道府県を選択</option>
+                          <option value="" disabled>{t('select_prefecture')}</option>
                           {PREFECTURES.map((p) => (
                             <option key={p} value={p}>{p}</option>
                           ))}
@@ -522,7 +563,7 @@ export default function VisaForm() {
                         <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
-                        {field} <span className="text-red-500">*</span>
+                        {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
                       </label>
 
                       {SELECT_OPTIONS[field] ? (
@@ -532,9 +573,12 @@ export default function VisaForm() {
                           onChange={handleChange}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                         >
-                          <option value="" disabled>選択してください</option>
+                          <option value="" disabled>{t('select_visa_type')}</option>
+
                           {SELECT_OPTIONS[field].map((opt) => (
-                            <option key={opt} value={opt}>{opt}</option>
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
                           ))}
                         </select>
                       ) : DATE_FIELDS.has(field) ? (
@@ -562,7 +606,7 @@ export default function VisaForm() {
                           name={`dynamic_${field}`}
                           value={form.dynamicFields?.[field] || ''}
                           onChange={handleChange}
-                          placeholder={`例）${field}を入力してください`}
+                          placeholder={t('placeholder_company_email')}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         />
                       )}
@@ -579,7 +623,7 @@ export default function VisaForm() {
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
               </svg>
-              添付（任意）
+              {t('attachments')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -587,7 +631,7 @@ export default function VisaForm() {
                   <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                   </svg>
-                  証明写真（任意）
+                  {t('proof_photo')}
                 </label>
                 <input
                   type="file"
@@ -595,14 +639,14 @@ export default function VisaForm() {
                   disabled
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 cursor-not-allowed"
                 />
-                <p className="text-xs text-gray-500">デモのため未入力可</p>
+                <p className="text-xs text-gray-500">{t('demo_only')}</p>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                   <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
-                  添付書類（任意）
+                  {t('attachment_files')}
                 </label>
                 <input
                   type="file"
@@ -610,7 +654,7 @@ export default function VisaForm() {
                   disabled
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 cursor-not-allowed"
                 />
-                <p className="text-xs text-gray-500">デモのため未入力可</p>
+                <p className="text-xs text-gray-500">{t('demo_only')}</p>
               </div>
             </div>
           </div>
@@ -621,21 +665,21 @@ export default function VisaForm() {
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
               </svg>
-              企業連絡先
+              {t('company_contact')}
             </h3>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
                 </svg>
-                所属企業担当者メール（任意）
+{t('company_contact_label')}
               </label>
               <input
                 name="companyContactEmail"
                 type="email"
                 value={form.companyContactEmail || ''}
                 onChange={handleChange}
-                placeholder="例）contact@company.com"
+                placeholder={t('placeholder_email')}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
@@ -662,7 +706,7 @@ export default function VisaForm() {
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
-                    申請を提出
+                    {t('submit_button')}
                   </>
                 )}
               </button>

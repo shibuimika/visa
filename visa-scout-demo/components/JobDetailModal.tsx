@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { formatRelative, formatSalaryRange } from '@/lib/format';
 import Tag from '@/components/Tag';
 import type { Job } from '@/lib/mockData';
+import { useLanguage } from '@/lib/LanguageContext';
 
 type Props = {
   open: boolean;
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export default function JobDetailModal({ open, job, onClose, onApply, applied }: Props) {
+  const { t } = useLanguage();
+
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -23,15 +26,15 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
   const items = useMemo(() => {
     if (!job) return [] as Array<{ label: string; value?: string }>;
     return [
-      { label: '勤務地', value: job.location },
-      { label: 'リモート', value: job.remote },
-      { label: '雇用形態', value: job.employmentType },
-      { label: '勤務時間', value: job.workingHours },
-      { label: '休日', value: job.holidays },
-      { label: '言語(業務)', value: job.workLang },
-      { label: '日本語 読み/会話', value: job.readingLevel && job.speakingLevel ? `${job.readingLevel}/${job.speakingLevel}` : undefined },
-      { label: '在留資格', value: job.visaKind },
-      { label: 'ビザ支援', value: job.visaSponsorship ? 'あり' : job.visaSponsorship === false ? 'なし' : undefined },
+      { label: t('location_label'), value: job.location },
+      { label: t('remote'), value: job.remote },
+      { label: t('employment_type_label'), value: job.employmentType },
+      { label: t('working_hours_label'), value: job.workingHours },
+      { label: t('holidays_label'), value: job.holidays },
+      { label: t('work_language_label'), value: job.workLang },
+      { label: t('japanese_read_speak_label'), value: job.readingLevel && job.speakingLevel ? `${job.readingLevel}/${job.speakingLevel}` : undefined },
+      { label: t('visa_type_label'), value: job.visaKind },
+      { label: t('visa_sponsorship_label'), value: job.visaSponsorship ? t('option_yes') : job.visaSponsorship === false ? t('option_no') : undefined },
     ].filter((i) => i.value);
   }, [job]);
 
@@ -74,7 +77,7 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
 
           {job.requiredSkills && job.requiredSkills.length > 0 && (
             <div>
-              <p className="text-sm text-gray-500 mb-2">必須スキル</p>
+              <p className="text-sm text-gray-500 mb-2">{t('required_skills_label')}</p>
               <div className="flex flex-wrap gap-2">
                 {job.requiredSkills.map((s) => (
                   <Tag key={s} color="gray">{s}</Tag>
@@ -85,7 +88,7 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
 
           {job.preferredSkills && job.preferredSkills.length > 0 && (
             <div>
-              <p className="text-sm text-gray-500 mb-2">歓迎スキル</p>
+              <p className="text-sm text-gray-500 mb-2">{t('welcome_skills_label')}</p>
               <div className="flex flex-wrap gap-2">
                 {job.preferredSkills.map((s) => (
                   <Tag key={s} color="blue">{s}</Tag>
@@ -96,14 +99,14 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
 
           {job.description && (
             <div>
-              <p className="text-sm text-gray-500 mb-2">仕事内容</p>
+              <p className="text-sm text-gray-500 mb-2">{t('job_description_label')}</p>
               <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{job.description}</p>
             </div>
           )}
 
           {job.benefits && job.benefits.length > 0 && (
             <div>
-              <p className="text-sm text-gray-500 mb-2">福利厚生</p>
+              <p className="text-sm text-gray-500 mb-2">{t('benefits_label')}</p>
               <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
                 {job.benefits.map((b) => (
                   <li key={b}>{b}</li>
@@ -113,11 +116,11 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
           )}
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="text-sm text-gray-700"><span className="text-gray-500">年収レンジ:</span> {formatSalaryRange(job.salaryMin, job.salaryMax, job.salary)}</div>
-            <div className="text-sm text-gray-700"><span className="text-gray-500">掲載:</span> {formatRelative(job.postedDate)}</div>
-            <div className="text-sm text-gray-700"><span className="text-gray-500">更新:</span> {formatRelative(job.lastUpdated)}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('salary_range_label')}</span> {formatSalaryRange(job.salaryMin, job.salaryMax, job.salary)}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('posted_label')}</span> {formatRelative(job.postedDate)}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('updated_label')}</span> {formatRelative(job.lastUpdated)}</div>
             {typeof job.applicantCount === 'number' && (
-              <div className="text-sm text-gray-700"><span className="text-gray-500">応募者数:</span> {job.applicantCount}</div>
+              <div className="text-sm text-gray-700"><span className="text-gray-500">{t('applicants_label')}</span> {job.applicantCount}</div>
             )}
           </div>
         </div>
@@ -125,11 +128,11 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
         <div className="p-6 border-t border-gray-100 flex items-center justify-between">
           <div className="text-gray-600 text-sm">
             {job.companyWebsite && (
-              <a href={job.companyWebsite} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">企業サイトを見る</a>
+              <a href={job.companyWebsite} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">{t('view_company_site')}</a>
             )}
           </div>
           <div className="flex items-center gap-3">
-            <button onClick={onClose} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">閉じる</button>
+            <button onClick={onClose} className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50">{t('close_button')}</button>
             <button
               disabled={applied}
               onClick={() => job && onApply(job.id)}
@@ -139,7 +142,7 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
                   : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl'
               }`}
             >
-              {applied ? '応募済み' : '応募する'}
+              {applied ? t('applied') : t('apply_job')}
             </button>
           </div>
         </div>

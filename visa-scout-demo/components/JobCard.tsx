@@ -3,6 +3,7 @@ import type { ScoredJob } from '@/lib/fakeApi';
 import { formatSalaryRange } from '@/lib/format';
 import Tag from '@/components/Tag';
 import MetaRow from '@/components/MetaRow';
+import { useLanguage } from '@/lib/LanguageContext';
 
 type Props = {
   job: Job | ScoredJob;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export default function JobCard({ job, applied, onApply }: Props) {
+  const { t } = useLanguage();
   const scored = (job as ScoredJob).score !== undefined ? (job as ScoredJob) : undefined;
   return (
     <div className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden">
@@ -67,7 +69,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
               </svg>
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">日本語レベル</p>
+              <p className="text-xs text-gray-500 font-medium">{t('japanese_level')}</p>
               <div>
                 <Tag color="blue" icon={<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10m0 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8m6 0V6"/></svg>}>
                   {job.jlpt}
@@ -82,7 +84,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
               </svg>
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">在留資格</p>
+              <p className="text-xs text-gray-500 font-medium">{t('visa_type_label')}</p>
               <div>
                 <Tag color="indigo" icon={<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>}>
                   {job.visaKind}
@@ -95,16 +97,16 @@ export default function JobCard({ job, applied, onApply }: Props) {
         {/* Extended Info */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           {job.location && (
-            <div className="text-sm text-gray-700"><span className="text-gray-500">勤務地:</span> {job.location}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('location')}:</span> {job.location}</div>
           )}
           {job.remote && (
-            <div className="text-sm text-gray-700"><span className="text-gray-500">リモート:</span> {job.remote}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('remote')}:</span> {job.remote}</div>
           )}
           {job.employmentType && (
-            <div className="text-sm text-gray-700"><span className="text-gray-500">雇用形態:</span> {job.employmentType}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('employment_type')}:</span> {job.employmentType}</div>
           )}
           {('applicantCount' in job) && typeof job.applicantCount === 'number' && (
-            <div className="text-sm text-gray-700"><span className="text-gray-500">応募者数:</span> {job.applicantCount}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('applicants')}:</span> {job.applicantCount}</div>
           )}
         </div>
         <MetaRow postedDate={job.postedDate} lastUpdated={job.lastUpdated} applicantCount={job.applicantCount} status={job.status} />
@@ -114,7 +116,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
         )}
         {job.requiredSkills && job.requiredSkills.length > 0 && (
           <div className="mb-4">
-            <p className="text-xs text-gray-500 mb-2">必須スキル</p>
+            <p className="text-xs text-gray-500 mb-2">{t('required_skills')}</p>
             <div className="flex flex-wrap gap-2">
               {job.requiredSkills.slice(0, 3).map((s) => (
                 <Tag key={s} color="gray">{s}</Tag>
@@ -125,7 +127,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
 
         {scored && scored.reasons?.length > 0 && (
           <div className="mb-6">
-            <p className="text-xs text-gray-500 mb-2">マッチ理由</p>
+            <p className="text-xs text-gray-500 mb-2">{t('match_reasons')}</p>
             <div className="flex flex-wrap gap-2">
               {scored.reasons.slice(0, 2).map((r, idx) => (
                 <span key={idx} className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
@@ -145,7 +147,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span>今すぐ応募可能</span>
+            <span>{t('apply_now_available')}</span>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -155,7 +157,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
               }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              詳細を見る
+              {t('view_details')}
             </button>
             <button
             disabled={applied}
@@ -171,14 +173,14 @@ export default function JobCard({ job, applied, onApply }: Props) {
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                 </svg>
-                応募済み
+                {t('applied')}
               </>
             ) : (
               <>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                 </svg>
-                応募する
+                {t('apply_job')}
               </>
             )}
             </button>
