@@ -1,0 +1,338 @@
+From b2bce683fa476bf68338fe380e5c37026c3ad1b5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E6=AD=A6=E4=BA=95=E3=80=80=E6=B7=B3=E4=B9=9F?=
+ <01062544@CF4724.local>
+Date: Fri, 22 Aug 2025 01:54:00 +0900
+Subject: [PATCH] =?UTF-8?q?=F0=9F=8C=90=20Fix=20incomplete=20multilingual?=
+ =?UTF-8?q?=20support?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Complete English translations for VISA form dynamic field names
+- Fix hardcoded Japanese text in selection options
+- Add proper JLPT level translations
+- Resolve duplicate property issues in i18n.ts
+- Improve type safety in LanguageContext
+- Fix ESLint errors and build issues
+
+All UI elements now properly support Japanese, English, and Chinese languages.
+---
+ visa-scout-demo/components/VisaForm.tsx |  25 +++---
+ visa-scout-demo/lib/LanguageContext.tsx |  21 +----
+ visa-scout-demo/lib/i18n.ts             | 108 ++++++++++++++----------
+ 3 files changed, 82 insertions(+), 72 deletions(-)
+
+diff --git a/visa-scout-demo/components/VisaForm.tsx b/visa-scout-demo/components/VisaForm.tsx
+index 9e0fefc..8b5ed9f 100644
+--- a/visa-scout-demo/components/VisaForm.tsx
++++ b/visa-scout-demo/components/VisaForm.tsx
+@@ -1,5 +1,6 @@
+ import { useCallback, useEffect, useMemo, useState } from 'react';
+ import type { Application, JLPT, VisaKind } from '@/lib/mockData';
++import type { TranslationKey } from '@/lib/i18n';
+ import { submitVisaApplication } from '@/lib/fakeApi';
+ import { ALL_COUNTRY_CODES } from '@/lib/countries';
+ import Toast from '@/components/Toast';
+@@ -360,11 +361,13 @@ export default function VisaForm() {
+                 onChange={handleChange}
+                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+               >
+-                {jlptLevels.map((l) => (
+-                  <option key={l} value={l}>
+-                    {l}
+-                  </option>
+-                ))}
++                <option value="" disabled>{t('select_jlpt')}</option>
++                <option value="N1">{t('jlpt_n1')}</option>
++                <option value="N2">{t('jlpt_n2')}</option>
++                <option value="N3">{t('jlpt_n3')}</option>
++                <option value="N4">{t('jlpt_n4')}</option>
++                <option value="N5">{t('jlpt_n5')}</option>
++                <option value="未取得">{t('jlpt_none')}</option>
+               </select>
+             </div>
+           </div>
+@@ -441,7 +444,7 @@ export default function VisaForm() {
+                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                           </svg>
+-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
++                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                         </label>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <input
+@@ -474,7 +477,7 @@ export default function VisaForm() {
+                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                           </svg>
+-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
++                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                         </label>
+                         <input
+                           list={`suggest_${field}`}
+@@ -502,7 +505,7 @@ export default function VisaForm() {
+                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                           </svg>
+-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
++                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                         </label>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <select
+@@ -511,7 +514,7 @@ export default function VisaForm() {
+                             onChange={handleChange}
+                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+                           >
+-                            <option value="" disabled>カテゴリを選択</option>
++                            <option value="" disabled>{t('select_category')}</option>
+                             <option value="エンジニア">{t('job_category_engineer')}</option>
+                             <option value="データ">{t('job_category_data')}</option>
+                             <option value="デザイン">{t('job_category_design')}</option>
+@@ -540,7 +543,7 @@ export default function VisaForm() {
+                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                           </svg>
+-                          {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
++                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                         </label>
+                         <select
+                           name={`dynamic_${field}`}
+@@ -563,7 +566,7 @@ export default function VisaForm() {
+                         <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                         </svg>
+-                        {t(getFieldTranslationKey(field))} <span className="text-red-500">*</span>
++                        {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                       </label>
+ 
+                       {SELECT_OPTIONS[field] ? (
+diff --git a/visa-scout-demo/lib/LanguageContext.tsx b/visa-scout-demo/lib/LanguageContext.tsx
+index 797e062..311fcef 100644
+--- a/visa-scout-demo/lib/LanguageContext.tsx
++++ b/visa-scout-demo/lib/LanguageContext.tsx
+@@ -1,10 +1,10 @@
+ import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+-import { Language, loadLanguage, saveLanguage, DEFAULT_LANGUAGE } from './i18n';
++import { Language, loadLanguage, saveLanguage, DEFAULT_LANGUAGE, TranslationKey, translations } from './i18n';
+ 
+ interface LanguageContextType {
+   language: Language;
+   setLanguage: (language: Language) => void;
+-  t: (key: string) => string;
++  t: (key: TranslationKey) => string;
+ }
+ 
+ const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+@@ -27,21 +27,8 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
+     saveLanguage(newLanguage);
+   };
+ 
+-  const t = (key: string): string => {
+-    // 動的なインポートを避けるため、直接translationsを参照
+-    const translations = {
+-      ja: () => import('./i18n').then(m => m.translations.ja[key as any] || key),
+-      en: () => import('./i18n').then(m => m.translations.en[key as any] || key),
+-      zh: () => import('./i18n').then(m => m.translations.zh[key as any] || key),
+-    };
+-
+-    // 同期的に現在の言語の翻訳を返す
+-    try {
+-      const translationModule = require('./i18n');
+-      return translationModule.translations[language]?.[key as any] || key;
+-    } catch {
+-      return key;
+-    }
++  const t = (key: TranslationKey): string => {
++    return translations[language]?.[key] || key;
+   };
+ 
+   return (
+diff --git a/visa-scout-demo/lib/i18n.ts b/visa-scout-demo/lib/i18n.ts
+index 62226ae..3c0396e 100644
+--- a/visa-scout-demo/lib/i18n.ts
++++ b/visa-scout-demo/lib/i18n.ts
+@@ -256,7 +256,15 @@ export type TranslationKey =
+   | 'applicants_label'
+   | 'status_label'
+   | 'status_open'
+-  | 'status_closed';
++  | 'status_closed'
++  
++  // JLPTレベル
++  | 'jlpt_n1'
++  | 'jlpt_n2'
++  | 'jlpt_n3'
++  | 'jlpt_n4'
++  | 'jlpt_n5'
++  | 'jlpt_none';
+ 
+ // 翻訳辞書
+ export const translations: Record<Language, Record<TranslationKey, string>> = {
+@@ -396,7 +404,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+ 
+     // 求人カード
+     japanese_level: '日本語レベル',
+-    visa_type_label: '在留資格',
+     location: '勤務地',
+     remote: 'リモート',
+     employment_type: '雇用形態',
+@@ -432,9 +439,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+     close_button: '閉じる',
+ 
+     // MetaRow
+-    posted_label: '掲載:',
+-    updated_label: '更新:',
+-    applicants_label: '応募者数:',
+     status_label: '状態:',
+     status_open: '募集中',
+     status_closed: '募集終了',
+@@ -444,6 +448,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+     language_en: 'English',
+     language_zh: '中文',
+ 
++    // JLPTレベル
++    jlpt_n1: 'N1',
++    jlpt_n2: 'N2',
++    jlpt_n3: 'N3',
++    jlpt_n4: 'N4',
++    jlpt_n5: 'N5',
++    jlpt_none: '未取得',
++
+     // VISAフォームの動的フィールド名
+     field_所属機関名: '所属機関名',
+     field_所在地: '所在地',
+@@ -654,7 +666,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+ 
+     // 求人カード
+     japanese_level: 'Japanese Level',
+-    visa_type_label: 'Visa Type',
+     location: 'Location',
+     remote: 'Remote',
+     employment_type: 'Employment Type',
+@@ -690,9 +701,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+     close_button: 'Close',
+ 
+     // MetaRow
+-    posted_label: 'Posted:',
+-    updated_label: 'Updated:',
+-    applicants_label: 'Applicants:',
+     status_label: 'Status:',
+     status_open: 'Open',
+     status_closed: 'Closed',
+@@ -702,41 +710,49 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+     language_en: 'English',
+     language_zh: '中文',
+ 
++    // JLPTレベル
++    jlpt_n1: 'N1',
++    jlpt_n2: 'N2',
++    jlpt_n3: 'N3',
++    jlpt_n4: 'N4',
++    jlpt_n5: 'N5',
++    jlpt_none: 'Not obtained',
++
+     // VISAフォームの動的フィールド名
+     field_所属機関名: 'Company/Organization Name',
+-    field_所在地: '所在地',
+-    field_雇用形態: '雇用形態',
+-    field_職務内容: '職務内容',
+-    field_就労場所: '就労場所',
+-    field_予定年収: '予定年収',
+-    field_労働時間: '労働時間',
+-    field_最終学歴: '最終学歴',
+-    field_関連職務年数: '関連職務年数',
+-    field_会社名: '会社名',
+-    field_事業所所在地: '事業所所在地',
+-    'field_資本金/出資総額': '資本金/出資総額',
+-    field_常勤職員数: '常勤職員数',
+-    field_法人番号: '法人番号',
+-    field_事業概要: '事業概要',
+-    field_事業開始状況: '事業開始状況',
+-    field_学校名: '学校名',
+-    'field_学部学科/課程': '学部学科/課程',
+-    'field_在籍区分（正規/研究生等）': '在籍区分（正規/研究生等）',
+-    field_在学期間: '在学期間',
+-    'field_奨学金の有無': '奨学金の有無',
+-    'field_配偶者氏名（日本人）': '配偶者氏名（日本人）',
+-    field_婚姻日: '婚姻日',
+-    field_同居状況: '同居状況',
+-    field_扶養者氏名: '扶養者氏名',
+-    'field_扶養者の在留資格/期間': '扶養者の在留資格/期間',
+-    'field_扶養者の勤務先/収入': '扶養者の勤務先/収入',
+-    field_同居予定住所: '同居予定住所',
++    field_所在地: 'Location',
++    field_雇用形態: 'Employment Type',
++    field_職務内容: 'Job Description',
++    field_就労場所: 'Work Location',
++    field_予定年収: 'Expected Annual Salary',
++    field_労働時間: 'Working Hours',
++    field_最終学歴: 'Highest Education',
++    field_関連職務年数: 'Years of Relevant Experience',
++    field_会社名: 'Company Name',
++    field_事業所所在地: 'Office Location',
++    'field_資本金/出資総額': 'Capital/Investment Amount',
++    field_常勤職員数: 'Number of Full-time Employees',
++    field_法人番号: 'Corporate Number',
++    field_事業概要: 'Business Overview',
++    field_事業開始状況: 'Business Start Status',
++    field_学校名: 'School Name',
++    'field_学部学科/課程': 'Faculty/Department/Course',
++    'field_在籍区分（正規/研究生等）': 'Enrollment Status (Regular/Research Student, etc.)',
++    field_在学期間: 'Study Period',
++    'field_奨学金の有無': 'Scholarship Status',
++    'field_配偶者氏名（日本人）': 'Spouse Name (Japanese National)',
++    field_婚姻日: 'Marriage Date',
++    field_同居状況: 'Living Situation',
++    field_扶養者氏名: 'Supporter Name',
++    'field_扶養者の在留資格/期間': 'Supporter\'s Visa Status/Period',
++    'field_扶養者の勤務先/収入': 'Supporter\'s Workplace/Income',
++    field_同居予定住所: 'Planned Address for Living Together',
+ 
+     // VISAフォームの固定ラベル
+-    passport_number_label: 'パスポート番号（任意）',
+-    passport_expiry_label: 'パスポート有効期限（任意）',
+-    company_contact_label: '所属企業担当者メール（任意）',
+-    demo_saved_message: '申請内容を保存しました（デモ）',
++    passport_number_label: 'Passport Number (Optional)',
++    passport_expiry_label: 'Passport Expiry Date (Optional)',
++    company_contact_label: 'Company Contact Email (Optional)',
++    demo_saved_message: 'Application saved successfully (Demo)',
+ 
+     // プレースホルダー
+     placeholder_year_income: 'e.g., Annual Salary (in 10,000 yen)',
+@@ -912,7 +928,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+ 
+     // 求人カード
+     japanese_level: '日语水平',
+-    visa_type_label: '在留资格',
+     location: '工作地点',
+     remote: '远程',
+     employment_type: '雇用形态',
+@@ -948,9 +963,6 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+     close_button: '关闭',
+ 
+     // MetaRow
+-    posted_label: '发布:',
+-    updated_label: '更新:',
+-    applicants_label: '申请人数:',
+     status_label: '状态:',
+     status_open: '正在招聘',
+     status_closed: '招聘结束',
+@@ -960,6 +972,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
+     language_en: 'English',
+     language_zh: '中文',
+ 
++    // JLPTレベル
++    jlpt_n1: 'N1',
++    jlpt_n2: 'N2',
++    jlpt_n3: 'N3',
++    jlpt_n4: 'N4',
++    jlpt_n5: 'N5',
++    jlpt_none: '未获得',
++
+     // VISAフォームの動的フィールド名
+     field_所属機関名: '所属机构名称',
+     field_所在地: '所在地',
+-- 
+2.39.5 (Apple Git-154)
+

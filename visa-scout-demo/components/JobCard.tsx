@@ -4,6 +4,7 @@ import { formatSalaryRange } from '@/lib/format';
 import Tag from '@/components/Tag';
 import MetaRow from '@/components/MetaRow';
 import { useLanguage } from '@/lib/LanguageContext';
+import { translateLocation, translateEmploymentType } from '@/lib/locationUtils';
 
 type Props = {
   job: Job | ScoredJob;
@@ -12,7 +13,7 @@ type Props = {
 };
 
 export default function JobCard({ job, applied, onApply }: Props) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const scored = (job as ScoredJob).score !== undefined ? (job as ScoredJob) : undefined;
   return (
     <div className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden">
@@ -97,13 +98,13 @@ export default function JobCard({ job, applied, onApply }: Props) {
         {/* Extended Info */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
           {job.location && (
-            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('location')}:</span> {job.location}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('location')}:</span> {translateLocation(job.location, language)}</div>
           )}
           {job.remote && (
             <div className="text-sm text-gray-700"><span className="text-gray-500">{t('remote')}:</span> {job.remote}</div>
           )}
           {job.employmentType && (
-            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('employment_type')}:</span> {job.employmentType}</div>
+            <div className="text-sm text-gray-700"><span className="text-gray-500">{t('employment_type')}:</span> {translateEmploymentType(job.employmentType, language)}</div>
           )}
           {('applicantCount' in job) && typeof job.applicantCount === 'number' && (
             <div className="text-sm text-gray-700"><span className="text-gray-500">{t('applicants')}:</span> {job.applicantCount}</div>
