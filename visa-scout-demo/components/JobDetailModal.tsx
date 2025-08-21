@@ -3,6 +3,7 @@ import { formatRelative, formatSalaryRange } from '@/lib/format';
 import Tag from '@/components/Tag';
 import type { Job } from '@/lib/mockData';
 import { useLanguage } from '@/lib/LanguageContext';
+import { translateLocation, translateEmploymentType } from '@/lib/locationUtils';
 
 type Props = {
   open: boolean;
@@ -13,7 +14,7 @@ type Props = {
 };
 
 export default function JobDetailModal({ open, job, onClose, onApply, applied }: Props) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -26,9 +27,9 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
   const items = useMemo(() => {
     if (!job) return [] as Array<{ label: string; value?: string }>;
     return [
-      { label: t('location_label'), value: job.location },
+      { label: t('location_label'), value: job.location ? translateLocation(job.location, language) : undefined },
       { label: t('remote'), value: job.remote },
-      { label: t('employment_type_label'), value: job.employmentType },
+      { label: t('employment_type_label'), value: job.employmentType ? translateEmploymentType(job.employmentType, language) : undefined },
       { label: t('working_hours_label'), value: job.workingHours },
       { label: t('holidays_label'), value: job.holidays },
       { label: t('work_language_label'), value: job.workLang },

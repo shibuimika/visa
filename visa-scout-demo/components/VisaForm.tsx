@@ -13,9 +13,55 @@ const jlptLevels: JLPT[] = ['N1', 'N2', 'N3', 'N4', 'N5', '未取得'];
 // 共通項目
 const COMMON = ['氏名','国籍','在留資格','在留期限','日本語レベル（JLPT）'] as const;
 
-// 都道府県
-const PREFECTURES = [
-  '北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県','沖縄県'
+// 都道府県 - 翻訳キーマッピング
+const PREFECTURE_MAPPINGS = [
+  { key: 'prefecture_hokkaido', value: '北海道' },
+  { key: 'prefecture_aomori', value: '青森県' },
+  { key: 'prefecture_iwate', value: '岩手県' },
+  { key: 'prefecture_miyagi', value: '宮城県' },
+  { key: 'prefecture_akita', value: '秋田県' },
+  { key: 'prefecture_yamagata', value: '山形県' },
+  { key: 'prefecture_fukushima', value: '福島県' },
+  { key: 'prefecture_ibaraki', value: '茨城県' },
+  { key: 'prefecture_tochigi', value: '栃木県' },
+  { key: 'prefecture_gunma', value: '群馬県' },
+  { key: 'prefecture_saitama', value: '埼玉県' },
+  { key: 'prefecture_chiba', value: '千葉県' },
+  { key: 'prefecture_tokyo', value: '東京都' },
+  { key: 'prefecture_kanagawa', value: '神奈川県' },
+  { key: 'prefecture_niigata', value: '新潟県' },
+  { key: 'prefecture_toyama', value: '富山県' },
+  { key: 'prefecture_ishikawa', value: '石川県' },
+  { key: 'prefecture_fukui', value: '福井県' },
+  { key: 'prefecture_yamanashi', value: '山梨県' },
+  { key: 'prefecture_nagano', value: '長野県' },
+  { key: 'prefecture_gifu', value: '岐阜県' },
+  { key: 'prefecture_shizuoka', value: '静岡県' },
+  { key: 'prefecture_aichi', value: '愛知県' },
+  { key: 'prefecture_mie', value: '三重県' },
+  { key: 'prefecture_shiga', value: '滋賀県' },
+  { key: 'prefecture_kyoto', value: '京都府' },
+  { key: 'prefecture_osaka', value: '大阪府' },
+  { key: 'prefecture_hyogo', value: '兵庫県' },
+  { key: 'prefecture_nara', value: '奈良県' },
+  { key: 'prefecture_wakayama', value: '和歌山県' },
+  { key: 'prefecture_tottori', value: '鳥取県' },
+  { key: 'prefecture_shimane', value: '島根県' },
+  { key: 'prefecture_okayama', value: '岡山県' },
+  { key: 'prefecture_hiroshima', value: '広島県' },
+  { key: 'prefecture_yamaguchi', value: '山口県' },
+  { key: 'prefecture_tokushima', value: '徳島県' },
+  { key: 'prefecture_kagawa', value: '香川県' },
+  { key: 'prefecture_ehime', value: '愛媛県' },
+  { key: 'prefecture_kochi', value: '高知県' },
+  { key: 'prefecture_fukuoka', value: '福岡県' },
+  { key: 'prefecture_saga', value: '佐賀県' },
+  { key: 'prefecture_nagasaki', value: '長崎県' },
+  { key: 'prefecture_kumamoto', value: '熊本県' },
+  { key: 'prefecture_oita', value: '大分県' },
+  { key: 'prefecture_miyazaki', value: '宮崎県' },
+  { key: 'prefecture_kagoshima', value: '鹿児島県' },
+  { key: 'prefecture_okinawa', value: '沖縄県' }
 ];
 
 // VISA種類別の動的項目マッピング
@@ -469,8 +515,20 @@ export default function VisaForm() {
                   // 会社／学校名に簡易サジェスト
                   if (field === '所属機関名' || field === '会社名' || field === '学校名') {
                     const SUGGEST = field === '学校名'
-                      ? ['東京大学', '早稲田大学', '慶應義塾大学', '京都大学', '大阪大学']
-                      : ['ACME KK', 'Globex', 'Soylent', 'Initech', 'Pied Piper'];
+                      ? [
+                          { key: 'university_tokyo', value: '東京大学' },
+                          { key: 'university_waseda', value: '早稲田大学' },
+                          { key: 'university_keio', value: '慶應義塾大学' },
+                          { key: 'university_kyoto', value: '京都大学' },
+                          { key: 'university_osaka', value: '大阪大学' }
+                        ]
+                      : [
+                          { key: 'company_acme', value: 'ACME KK' },
+                          { key: 'company_globex', value: 'Globex' },
+                          { key: 'company_soylent', value: 'Soylent' },
+                          { key: 'company_initech', value: 'Initech' },
+                          { key: 'company_piedpiper', value: 'Pied Piper' }
+                        ];
                     return (
                       <div key={field} className="space-y-2">
                         <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
@@ -488,8 +546,8 @@ export default function VisaForm() {
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         />
                         <datalist id={`suggest_${field}`}>
-                          {SUGGEST.map((s) => (
-                            <option key={s} value={s} />
+                          {SUGGEST.map((item, i) => (
+                            <option key={i} value={t(item.key as TranslationKey)} />
                           ))}
                         </datalist>
                       </div>
@@ -552,8 +610,10 @@ export default function VisaForm() {
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                         >
                           <option value="" disabled>{t('select_prefecture')}</option>
-                          {PREFECTURES.map((p) => (
-                            <option key={p} value={p}>{p}</option>
+                          {PREFECTURE_MAPPINGS.map((pref) => (
+                            <option key={pref.value} value={pref.value}>
+                              {t(pref.key as TranslationKey)}
+                            </option>
                           ))}
                         </select>
                       </div>

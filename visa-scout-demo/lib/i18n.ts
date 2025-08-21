@@ -74,13 +74,53 @@ export type TranslationKey =
   | 'visa_type_business'
 
   // 都道府県（翻訳版）
-  | 'prefecture_tokyo'
-  | 'prefecture_osaka'
-  | 'prefecture_kyoto'
-  | 'prefecture_kanagawa'
-  | 'prefecture_aichi'
-  | 'prefecture_fukuoka'
   | 'prefecture_hokkaido'
+  | 'prefecture_aomori'
+  | 'prefecture_iwate'
+  | 'prefecture_miyagi'
+  | 'prefecture_akita'
+  | 'prefecture_yamagata'
+  | 'prefecture_fukushima'
+  | 'prefecture_ibaraki'
+  | 'prefecture_tochigi'
+  | 'prefecture_gunma'
+  | 'prefecture_saitama'
+  | 'prefecture_chiba'
+  | 'prefecture_tokyo'
+  | 'prefecture_kanagawa'
+  | 'prefecture_niigata'
+  | 'prefecture_toyama'
+  | 'prefecture_ishikawa'
+  | 'prefecture_fukui'
+  | 'prefecture_yamanashi'
+  | 'prefecture_nagano'
+  | 'prefecture_gifu'
+  | 'prefecture_shizuoka'
+  | 'prefecture_aichi'
+  | 'prefecture_mie'
+  | 'prefecture_shiga'
+  | 'prefecture_kyoto'
+  | 'prefecture_osaka'
+  | 'prefecture_hyogo'
+  | 'prefecture_nara'
+  | 'prefecture_wakayama'
+  | 'prefecture_tottori'
+  | 'prefecture_shimane'
+  | 'prefecture_okayama'
+  | 'prefecture_hiroshima'
+  | 'prefecture_yamaguchi'
+  | 'prefecture_tokushima'
+  | 'prefecture_kagawa'
+  | 'prefecture_ehime'
+  | 'prefecture_kochi'
+  | 'prefecture_fukuoka'
+  | 'prefecture_saga'
+  | 'prefecture_nagasaki'
+  | 'prefecture_kumamoto'
+  | 'prefecture_oita'
+  | 'prefecture_miyazaki'
+  | 'prefecture_kagoshima'
+  | 'prefecture_okinawa'
 
   // 雇用形態（翻訳版）
   | 'employment_fulltime'
@@ -264,7 +304,19 @@ export type TranslationKey =
   | 'jlpt_n3'
   | 'jlpt_n4'
   | 'jlpt_n5'
-  | 'jlpt_none';
+  | 'jlpt_none'
+  
+  // 学校名・会社名候補
+  | 'university_tokyo'
+  | 'university_waseda'
+  | 'university_keio'
+  | 'university_kyoto'
+  | 'university_osaka'
+  | 'company_acme'
+  | 'company_globex'
+  | 'company_soylent'
+  | 'company_initech'
+  | 'company_piedpiper';
 
 // 翻訳辞書
 export const translations: Record<Language, Record<TranslationKey, string>> = {
@@ -341,13 +393,53 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     visa_type_business: '経営・管理',
 
     // 都道府県（翻訳版）
-    prefecture_tokyo: '東京都',
-    prefecture_osaka: '大阪府',
-    prefecture_kyoto: '京都府',
-    prefecture_kanagawa: '神奈川県',
-    prefecture_aichi: '愛知県',
-    prefecture_fukuoka: '福岡県',
     prefecture_hokkaido: '北海道',
+    prefecture_aomori: '青森県',
+    prefecture_iwate: '岩手県',
+    prefecture_miyagi: '宮城県',
+    prefecture_akita: '秋田県',
+    prefecture_yamagata: '山形県',
+    prefecture_fukushima: '福島県',
+    prefecture_ibaraki: '茨城県',
+    prefecture_tochigi: '栃木県',
+    prefecture_gunma: '群馬県',
+    prefecture_saitama: '埼玉県',
+    prefecture_chiba: '千葉県',
+    prefecture_tokyo: '東京都',
+    prefecture_kanagawa: '神奈川県',
+    prefecture_niigata: '新潟県',
+    prefecture_toyama: '富山県',
+    prefecture_ishikawa: '石川県',
+    prefecture_fukui: '福井県',
+    prefecture_yamanashi: '山梨県',
+    prefecture_nagano: '長野県',
+    prefecture_gifu: '岐阜県',
+    prefecture_shizuoka: '静岡県',
+    prefecture_aichi: '愛知県',
+    prefecture_mie: '三重県',
+    prefecture_shiga: '滋賀県',
+    prefecture_kyoto: '京都府',
+    prefecture_osaka: '大阪府',
+    prefecture_hyogo: '兵庫県',
+    prefecture_nara: '奈良県',
+    prefecture_wakayama: '和歌山県',
+    prefecture_tottori: '鳥取県',
+    prefecture_shimane: '島根県',
+    prefecture_okayama: '岡山県',
+    prefecture_hiroshima: '広島県',
+    prefecture_yamaguchi: '山口県',
+    prefecture_tokushima: '徳島県',
+    prefecture_kagawa: '香川県',
+    prefecture_ehime: '愛媛県',
+    prefecture_kochi: '高知県',
+    prefecture_fukuoka: '福岡県',
+    prefecture_saga: '佐賀県',
+    prefecture_nagasaki: '長崎県',
+    prefecture_kumamoto: '熊本県',
+    prefecture_oita: '大分県',
+    prefecture_miyazaki: '宮崎県',
+    prefecture_kagoshima: '鹿児島県',
+    prefecture_okinawa: '沖縄県',
 
     // 雇用形態（翻訳版）
     employment_fulltime: '正社員',
@@ -455,6 +547,18 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     jlpt_n4: 'N4',
     jlpt_n5: 'N5',
     jlpt_none: '未取得',
+
+    // 学校名・会社名候補
+    university_tokyo: '東京大学',
+    university_waseda: '早稲田大学',
+    university_keio: '慶應義塾大学',
+    university_kyoto: '京都大学',
+    university_osaka: '大阪大学',
+    company_acme: 'ACME KK',
+    company_globex: 'Globex',
+    company_soylent: 'Soylent',
+    company_initech: 'Initech',
+    company_piedpiper: 'Pied Piper',
 
     // VISAフォームの動的フィールド名
     field_所属機関名: '所属機関名',
@@ -603,13 +707,53 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     visa_type_business: 'Business Manager',
 
     // 都道府県（翻訳版）
-    prefecture_tokyo: 'Tokyo',
-    prefecture_osaka: 'Osaka',
-    prefecture_kyoto: 'Kyoto',
-    prefecture_kanagawa: 'Kanagawa',
-    prefecture_aichi: 'Aichi',
-    prefecture_fukuoka: 'Fukuoka',
     prefecture_hokkaido: 'Hokkaido',
+    prefecture_aomori: 'Aomori',
+    prefecture_iwate: 'Iwate',
+    prefecture_miyagi: 'Miyagi',
+    prefecture_akita: 'Akita',
+    prefecture_yamagata: 'Yamagata',
+    prefecture_fukushima: 'Fukushima',
+    prefecture_ibaraki: 'Ibaraki',
+    prefecture_tochigi: 'Tochigi',
+    prefecture_gunma: 'Gunma',
+    prefecture_saitama: 'Saitama',
+    prefecture_chiba: 'Chiba',
+    prefecture_tokyo: 'Tokyo',
+    prefecture_kanagawa: 'Kanagawa',
+    prefecture_niigata: 'Niigata',
+    prefecture_toyama: 'Toyama',
+    prefecture_ishikawa: 'Ishikawa',
+    prefecture_fukui: 'Fukui',
+    prefecture_yamanashi: 'Yamanashi',
+    prefecture_nagano: 'Nagano',
+    prefecture_gifu: 'Gifu',
+    prefecture_shizuoka: 'Shizuoka',
+    prefecture_aichi: 'Aichi',
+    prefecture_mie: 'Mie',
+    prefecture_shiga: 'Shiga',
+    prefecture_kyoto: 'Kyoto',
+    prefecture_osaka: 'Osaka',
+    prefecture_hyogo: 'Hyogo',
+    prefecture_nara: 'Nara',
+    prefecture_wakayama: 'Wakayama',
+    prefecture_tottori: 'Tottori',
+    prefecture_shimane: 'Shimane',
+    prefecture_okayama: 'Okayama',
+    prefecture_hiroshima: 'Hiroshima',
+    prefecture_yamaguchi: 'Yamaguchi',
+    prefecture_tokushima: 'Tokushima',
+    prefecture_kagawa: 'Kagawa',
+    prefecture_ehime: 'Ehime',
+    prefecture_kochi: 'Kochi',
+    prefecture_fukuoka: 'Fukuoka',
+    prefecture_saga: 'Saga',
+    prefecture_nagasaki: 'Nagasaki',
+    prefecture_kumamoto: 'Kumamoto',
+    prefecture_oita: 'Oita',
+    prefecture_miyazaki: 'Miyazaki',
+    prefecture_kagoshima: 'Kagoshima',
+    prefecture_okinawa: 'Okinawa',
 
     // 雇用形態（翻訳版）
     employment_fulltime: 'Full-time',
@@ -717,6 +861,18 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     jlpt_n4: 'N4',
     jlpt_n5: 'N5',
     jlpt_none: 'Not obtained',
+
+    // 学校名・会社名候補
+    university_tokyo: 'University of Tokyo',
+    university_waseda: 'Waseda University',
+    university_keio: 'Keio University',
+    university_kyoto: 'Kyoto University',
+    university_osaka: 'Osaka University',
+    company_acme: 'ACME KK',
+    company_globex: 'Globex',
+    company_soylent: 'Soylent',
+    company_initech: 'Initech',
+    company_piedpiper: 'Pied Piper',
 
     // VISAフォームの動的フィールド名
     field_所属機関名: 'Company/Organization Name',
@@ -865,13 +1021,53 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     visa_type_business: '经营・管理',
 
     // 都道府県（翻訳版）
-    prefecture_tokyo: '东京都',
-    prefecture_osaka: '大阪府',
-    prefecture_kyoto: '京都府',
-    prefecture_kanagawa: '神奈川县',
-    prefecture_aichi: '爱知县',
-    prefecture_fukuoka: '福冈县',
     prefecture_hokkaido: '北海道',
+    prefecture_aomori: '青森县',
+    prefecture_iwate: '岩手县',
+    prefecture_miyagi: '宫城县',
+    prefecture_akita: '秋田县',
+    prefecture_yamagata: '山形县',
+    prefecture_fukushima: '福島县',
+    prefecture_ibaraki: '茨城县',
+    prefecture_tochigi: '栩木县',
+    prefecture_gunma: '群马县',
+    prefecture_saitama: '埼玉县',
+    prefecture_chiba: '千叶县',
+    prefecture_tokyo: '东京都',
+    prefecture_kanagawa: '神奈川县',
+    prefecture_niigata: '新潟县',
+    prefecture_toyama: '富山县',
+    prefecture_ishikawa: '石川县',
+    prefecture_fukui: '福井县',
+    prefecture_yamanashi: '山梨县',
+    prefecture_nagano: '長野县',
+    prefecture_gifu: '岐阜县',
+    prefecture_shizuoka: '静冈县',
+    prefecture_aichi: '爱知县',
+    prefecture_mie: '三重县',
+    prefecture_shiga: '滋贺县',
+    prefecture_kyoto: '京都府',
+    prefecture_osaka: '大阪府',
+    prefecture_hyogo: '兵庫县',
+    prefecture_nara: '奈良县',
+    prefecture_wakayama: '和歌山县',
+    prefecture_tottori: '鸟取县',
+    prefecture_shimane: '岛根县',
+    prefecture_okayama: '冈山县',
+    prefecture_hiroshima: '广岛县',
+    prefecture_yamaguchi: '山口县',
+    prefecture_tokushima: '德岛县',
+    prefecture_kagawa: '香川县',
+    prefecture_ehime: '爱媛县',
+    prefecture_kochi: '高知县',
+    prefecture_fukuoka: '福冈县',
+    prefecture_saga: '佐贺县',
+    prefecture_nagasaki: '長崎县',
+    prefecture_kumamoto: '熊本县',
+    prefecture_oita: '大分县',
+    prefecture_miyazaki: '宫崎县',
+    prefecture_kagoshima: '鹿兒岛县',
+    prefecture_okinawa: '冲繳县',
 
     // 雇用形態（翻訳版）
     employment_fulltime: '正式员工',
@@ -979,6 +1175,18 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     jlpt_n4: 'N4',
     jlpt_n5: 'N5',
     jlpt_none: '未获得',
+
+    // 学校名・会社名候補
+    university_tokyo: '东京大学',
+    university_waseda: '早稻田大学',
+    university_keio: '慶应义塾大学',
+    university_kyoto: '京都大学',
+    university_osaka: '大阪大学',
+    company_acme: 'ACME KK',
+    company_globex: 'Globex',
+    company_soylent: 'Soylent',
+    company_initech: 'Initech',
+    company_piedpiper: 'Pied Piper',
 
     // VISAフォームの動的フィールド名
     field_所属機関名: '所属机构名称',
