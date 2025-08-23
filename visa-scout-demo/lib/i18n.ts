@@ -56,6 +56,15 @@ export type TranslationKey =
   | 'placeholder_passport'
   | 'placeholder_email'
   | 'placeholder_job_description'
+  | 'placeholder_spouse_name'
+  | 'placeholder_marriage_date'
+  | 'placeholder_supporter_name'
+  | 'placeholder_workplace_income'
+  | 'placeholder_address'
+  | 'placeholder_faculty_department_course'
+  | 'placeholder_office_location'
+  | 'placeholder_corporate_number'
+  | 'placeholder_business_status'
   | 'select_country'
   | 'select_gender'
   | 'select_visa_type'
@@ -268,6 +277,15 @@ export type TranslationKey =
   | 'select_enrollment_type'
   | 'select_scholarship'
   | 'select_living_arrangement'
+  | 'select_supporter_visa'
+  | 'option_technical_humanities'
+  | 'option_technical'
+  | 'option_management'
+  | 'option_study'
+  | 'option_family_stay'
+  | 'option_specific_activities'
+  | 'option_permanent_resident'
+  | 'option_spouse_japanese'
   | 'option_fulltime'
   | 'option_contract'
   | 'option_parttime'
@@ -398,6 +416,15 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     placeholder_passport: '例）TR1234567',
     placeholder_email: '例）contact@company.com',
     placeholder_job_description: '例）フロントエンド開発、API連携、UI改善など',
+    placeholder_spouse_name: '例）田中 花子',
+    placeholder_marriage_date: '例）2020-03-15',
+    placeholder_supporter_name: '例）佐藤 一郎',
+    placeholder_workplace_income: '例）株式会社ABC 営業部 年収500万円',
+    placeholder_address: '例）東京都渋谷区神南1-1-1',
+    placeholder_faculty_department_course: '例）経済学部 経済学科 修士課程',
+    placeholder_office_location: '例）東京都渋谷区神南1-1-1',
+    placeholder_corporate_number: '例）1234567890123',
+    placeholder_business_status: '例）事業開始前、初期開発中、運営中など',
     select_country: '国を選択',
     select_gender: '未選択',
     select_visa_type: '在留資格を選択',
@@ -595,13 +622,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     field_関連職務年数: '関連職務年数',
     field_会社名: '会社名',
     field_事業所所在地: '事業所所在地',
-    'field_資本金/出資総額': '資本金/出資総額',
+    'field_資本金/出資総額': '資本金・出資総額',
     field_常勤職員数: '常勤職員数',
     field_法人番号: '法人番号',
     field_事業概要: '事業概要',
     field_事業開始状況: '事業開始状況',
     field_学校名: '学校名',
-    'field_学部学科/課程': '学部学科/課程',
+    'field_学部学科/課程': '学部・学科・課程',
     'field_在籍区分（正規/研究生等）': '在籍区分（正規/研究生等）',
     field_在学期間: '在学期間',
     'field_奨学金の有無': '奨学金の有無',
@@ -609,8 +636,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     field_婚姻日: '婚姻日',
     field_同居状況: '同居状況',
     field_扶養者氏名: '扶養者氏名',
-    'field_扶養者の在留資格/期間': '扶養者の在留資格/期間',
-    'field_扶養者の勤務先/収入': '扶養者の勤務先/収入',
+    'field_扶養者の在留資格/期間': '扶養者の在留資格・期間',
+    'field_扶養者の勤務先/収入': '扶養者の勤務先・収入',
     field_同居予定住所: '同居予定住所',
 
     // VISAフォームの固定ラベル
@@ -657,6 +684,15 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     select_enrollment_type: '在籍区分を選択',
     select_scholarship: '選択してください',
     select_living_arrangement: '選択してください',
+    select_supporter_visa: '在留資格を選択',
+    option_technical_humanities: '技術・人文知識・国際業務',
+    option_technical: '技術',
+    option_management: '経営・管理',
+    option_study: '留学',
+    option_family_stay: '家族滞在',
+    option_specific_activities: '特定活動',
+    option_permanent_resident: '永住者',
+    option_spouse_japanese: '日本人配偶者等',
     option_fulltime: '正社員',
     option_contract: '契約社員',
     option_parttime: 'アルバイト',
@@ -735,6 +771,15 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     placeholder_passport: 'e.g., TR1234567',
     placeholder_email: 'e.g., contact@company.com',
     placeholder_job_description: 'e.g., Frontend development, API integration, UI improvements, etc.',
+    placeholder_spouse_name: 'e.g., Jane Smith',
+    placeholder_marriage_date: 'e.g., 2020-03-15',
+    placeholder_supporter_name: 'e.g., Michael Johnson',
+    placeholder_workplace_income: 'e.g., ABC Corporation Sales Dept. Annual Salary: $50,000',
+    placeholder_address: 'e.g., 1-1-1 Jinnan, Shibuya-ku, Tokyo',
+    placeholder_faculty_department_course: 'e.g., Faculty of Economics, Department of Economics, Master\'s Program',
+    placeholder_office_location: 'e.g., 1-1-1 Jinnan, Shibuya-ku, Tokyo',
+    placeholder_corporate_number: 'e.g., 1234567890123',
+    placeholder_business_status: 'e.g., Pre-business, Initial development, Operating, etc.',
     select_country: 'Select country',
     select_gender: 'Not selected',
     select_visa_type: 'Select visa type',
@@ -938,7 +983,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     field_事業概要: 'Business Overview',
     field_事業開始状況: 'Business Start Status',
     field_学校名: 'School Name',
-    'field_学部学科/課程': 'Faculty/Department/Course',
+    'field_学部学科/課程': 'Faculty, Department, Course',
     'field_在籍区分（正規/研究生等）': 'Enrollment Status (Regular/Research Student, etc.)',
     field_在学期間: 'Study Period',
     'field_奨学金の有無': 'Scholarship Status',
@@ -946,8 +991,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     field_婚姻日: 'Marriage Date',
     field_同居状況: 'Living Situation',
     field_扶養者氏名: 'Supporter Name',
-    'field_扶養者の在留資格/期間': 'Supporter\'s Visa Status/Period',
-    'field_扶養者の勤務先/収入': 'Supporter\'s Workplace/Income',
+    'field_扶養者の在留資格/期間': 'Supporter\'s Visa Status and Period',
+    'field_扶養者の勤務先/収入': 'Supporter\'s Workplace and Income',
     field_同居予定住所: 'Planned Address for Living Together',
 
     // VISAフォームの固定ラベル
@@ -994,6 +1039,15 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     select_enrollment_type: 'Select enrollment status',
     select_scholarship: 'Please select',
     select_living_arrangement: 'Please select',
+    select_supporter_visa: 'Select visa type',
+    option_technical_humanities: 'Skilled Worker',
+    option_technical: 'Technical',
+    option_management: 'Business Manager',
+    option_study: 'Student',
+    option_family_stay: 'Family Stay',
+    option_specific_activities: 'Specific Activities',
+    option_permanent_resident: 'Permanent Resident',
+    option_spouse_japanese: 'Spouse of Japanese National',
     option_fulltime: 'Full-time',
     option_contract: 'Contract',
     option_parttime: 'Part-time',
@@ -1072,6 +1126,15 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     placeholder_passport: '例如：TR1234567',
     placeholder_email: '例如：contact@company.com',
     placeholder_job_description: '例如：前端开发、API整合、UI改善等',
+    placeholder_spouse_name: '例如：田中花子',
+    placeholder_marriage_date: '例如：2020-03-15',
+    placeholder_supporter_name: '例如：佐藤一郎',
+    placeholder_workplace_income: '例如：ABC株式会社 営業部 年收入500万日元',
+    placeholder_address: '例如：东京都涩谷区神南1-1-1',
+    placeholder_faculty_department_course: '例如：经济学部 经济学科 硕士课程',
+    placeholder_office_location: '例如：东京都涩谷区神南1-1-1',
+    placeholder_corporate_number: '例如：1234567890123',
+    placeholder_business_status: '例如：事业开始前、初期开发中、运营中等',
     select_country: '选择国家',
     select_gender: '未选择',
     select_visa_type: '选择在留资格',
@@ -1269,13 +1332,13 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     field_関連職務年数: '相关职务年数',
     field_会社名: '公司名称',
     field_事業所所在地: '事务所所在地',
-    'field_資本金/出資総額': '资本金/出资总额',
+    'field_資本金/出資総額': '资本金・出资总额',
     field_常勤職員数: '常勤职员数',
     field_法人番号: '法人编号',
     field_事業概要: '事业概要',
     field_事業開始状況: '事业开始情况',
     field_学校名: '学校名称',
-    'field_学部学科/課程': '学部/学科/课程',
+    'field_学部学科/課程': '学部・学科・课程',
     'field_在籍区分（正規/研究生等）': '在籍区分（正规/研究生等）',
     field_在学期間: '在学期间',
     'field_奨学金の有無': '奖学金的有无',
@@ -1283,8 +1346,8 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     field_婚姻日: '结婚日期',
     field_同居状況: '同居情况',
     field_扶養者氏名: '抚养者姓名',
-    'field_扶養者の在留資格/期間': '抚养者的在留资格/期间',
-    'field_扶養者の勤務先/収入': '抚养者的工作单位/收入',
+    'field_扶養者の在留資格/期間': '抚养者的在留资格・期间',
+    'field_扶養者の勤務先/収入': '抚养者的工作单位・收入',
     field_同居予定住所: '计划同居地址',
 
     // VISAフォームの固定ラベル
@@ -1331,6 +1394,15 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     select_enrollment_type: '选择在籍区分',
     select_scholarship: '请选择',
     select_living_arrangement: '请选择',
+    select_supporter_visa: '选择在留资格',
+    option_technical_humanities: '技术・人文知识・国际业务',
+    option_technical: '技术',
+    option_management: '经营・管理',
+    option_study: '留学',
+    option_family_stay: '家属滞在',
+    option_specific_activities: '特定活动',
+    option_permanent_resident: '永住者',
+    option_spouse_japanese: '日本人配偶者等',
     option_fulltime: '正式员工',
     option_contract: '合同员工',
     option_parttime: '兼职',

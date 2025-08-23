@@ -37,7 +37,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 - Node 20 を使用（`.nvmrc` / `netlify.toml` で指定）
 - Netlify ビルド設定
-  - Base directory: `visa-scout-demo`
+  - Base directory: `.`
   - Build command: `npm run build`
   - Publish directory: `.next`
 - Plugins: `@netlify/plugin-nextjs`（`netlify.toml` に定義）

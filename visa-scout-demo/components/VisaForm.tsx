@@ -67,7 +67,7 @@ const PREFECTURE_KEYS = [
 const VISA_FIELD_KEYS: Record<string, string[]> = {
   'visa_type_student': [
     'field_学校名',
-    'field_学部学科_課程',
+    'field_学部学科/課程',
     'field_在籍区分（正規/研究生等）',
     'field_在学期間',
     'field_奨学金の有無'
@@ -86,7 +86,7 @@ const VISA_FIELD_KEYS: Record<string, string[]> = {
   'visa_type_business': [
     'field_会社名',
     'field_事業所所在地',
-    'field_資本金_出資総額',
+    'field_資本金/出資総額',
     'field_常勤職員数',
     'field_法人番号',
     'field_事業概要',
@@ -99,8 +99,8 @@ const VISA_FIELD_KEYS: Record<string, string[]> = {
   ],
   'visa_type_family': [
     'field_扶養者氏名',
-    'field_扶養者の在留資格_期間',
-    'field_扶養者の勤務先_収入',
+    'field_扶養者の在留資格/期間',
+    'field_扶養者の勤務先/収入',
     'field_同居予定住所'
   ]
 };
@@ -506,7 +506,17 @@ export default function VisaForm() {
                     'field_奨学金の有無': [t('scholarship_yes'), t('scholarship_no')],
                     'field_同居状況': [t('living_together'), t('living_separate')],
                     'field_労働時間': [t('option_fulltime_work'), t('option_parttime_work'), t('option_shift_work')],
-                    'field_最終学歴': [t('option_highschool'), t('option_college'), t('option_bachelor'), t('option_master'), t('option_phd')]
+                    'field_最終学歴': [t('option_highschool'), t('option_college'), t('option_bachelor'), t('option_master'), t('option_phd')],
+                    'field_扶養者の在留資格/期間': [
+                      t('option_technical_humanities'),
+                      t('option_technical'),
+                      t('option_management'),
+                      t('option_study'),
+                      t('option_family_stay'),
+                      t('option_specific_activities'),
+                      t('option_permanent_resident'),
+                      t('option_spouse_japanese')
+                    ]
                   };
 
                   // セレクトオプションのプレースホルダーテキスト
@@ -516,12 +526,13 @@ export default function VisaForm() {
                     'field_奨学金の有無': t('select_scholarship'),
                     'field_同居状況': t('select_living_arrangement'),
                     'field_労働時間': t('select_work_time'),
-                    'field_最終学歴': t('select_education_level')
+                    'field_最終学歴': t('select_education_level'),
+                    'field_扶養者の在留資格/期間': t('select_supporter_visa')
                   };
                   const NUMBER_HINTS: Record<string, { min?: number; max?: number; step?: number; placeholder?: string }> = {
                     'field_予定年収': { min: 100, max: 2000, step: 10, placeholder: t('placeholder_year_income') },
                     'field_常勤職員数': { min: 1, max: 100000, step: 1, placeholder: t('placeholder_employee_count') },
-                    'field_資本金_出資総額': { min: 1, max: 100000000, step: 1, placeholder: t('placeholder_capital') },
+                    'field_資本金/出資総額': { min: 1, max: 100000000, step: 1, placeholder: t('placeholder_capital') },
                     'field_関連職務年数': { min: 0, max: 50, step: 1, placeholder: t('placeholder_work_experience') }
                   };
 
@@ -531,9 +542,15 @@ export default function VisaForm() {
                     'field_会社名': t('placeholder_name'),
                     'field_学校名': t('placeholder_name'),
                     'field_事業概要': t('placeholder_job_description'),
-                    'field_扶養者氏名': t('placeholder_name'),
-                    'field_扶養者の勤務先_収入': t('placeholder_job_description'),
-                    'field_同居予定住所': t('placeholder_name')
+                    'field_学部学科/課程': t('placeholder_faculty_department_course'),
+                    'field_事業所所在地': t('placeholder_office_location'),
+                    'field_法人番号': t('placeholder_corporate_number'),
+                    'field_事業開始状況': t('placeholder_business_status'),
+                    'field_扶養者氏名': t('placeholder_supporter_name'),
+                    'field_扶養者の勤務先/収入': t('placeholder_workplace_income'),
+                    'field_同居予定住所': t('placeholder_address'),
+                    'field_配偶者氏名（日本人）': t('placeholder_spouse_name'),
+                    'field_婚姻日': t('placeholder_marriage_date')
                   };
                   const DATE_FIELDS = new Set<string>(['field_婚姻日']);
                   const PREF_FIELDS = new Set<string>(['field_所在地', 'field_就労場所']);

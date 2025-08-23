@@ -17,15 +17,15 @@ Content-Transfer-Encoding: 8bit
 
 All UI elements now properly support Japanese, English, and Chinese languages.
 ---
- visa-scout-demo/components/VisaForm.tsx |  25 +++---
- visa-scout-demo/lib/LanguageContext.tsx |  21 +----
- visa-scout-demo/lib/i18n.ts             | 108 ++++++++++++++----------
+ components/VisaForm.tsx |  25 +++---
+ lib/LanguageContext.tsx |  21 +----
+ lib/i18n.ts             | 108 ++++++++++++++----------
  3 files changed, 82 insertions(+), 72 deletions(-)
 
-diff --git a/visa-scout-demo/components/VisaForm.tsx b/visa-scout-demo/components/VisaForm.tsx
+diff --git a/components/VisaForm.tsx b/components/VisaForm.tsx
 index 9e0fefc..8b5ed9f 100644
---- a/visa-scout-demo/components/VisaForm.tsx
-+++ b/visa-scout-demo/components/VisaForm.tsx
+--- a/components/VisaForm.tsx
++++ b/components/VisaForm.tsx
 @@ -1,5 +1,6 @@
  import { useCallback, useEffect, useMemo, useState } from 'react';
  import type { Application, JLPT, VisaKind } from '@/lib/mockData';
@@ -106,10 +106,10 @@ index 9e0fefc..8b5ed9f 100644
                        </label>
  
                        {SELECT_OPTIONS[field] ? (
-diff --git a/visa-scout-demo/lib/LanguageContext.tsx b/visa-scout-demo/lib/LanguageContext.tsx
+diff --git a/lib/LanguageContext.tsx b/lib/LanguageContext.tsx
 index 797e062..311fcef 100644
---- a/visa-scout-demo/lib/LanguageContext.tsx
-+++ b/visa-scout-demo/lib/LanguageContext.tsx
+--- a/lib/LanguageContext.tsx
++++ b/lib/LanguageContext.tsx
 @@ -1,10 +1,10 @@
  import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 -import { Language, loadLanguage, saveLanguage, DEFAULT_LANGUAGE } from './i18n';
@@ -147,10 +147,10 @@ index 797e062..311fcef 100644
    };
  
    return (
-diff --git a/visa-scout-demo/lib/i18n.ts b/visa-scout-demo/lib/i18n.ts
+diff --git a/lib/i18n.ts b/lib/i18n.ts
 index 62226ae..3c0396e 100644
---- a/visa-scout-demo/lib/i18n.ts
-+++ b/visa-scout-demo/lib/i18n.ts
+--- a/lib/i18n.ts
++++ b/lib/i18n.ts
 @@ -256,7 +256,15 @@ export type TranslationKey =
    | 'applicants_label'
    | 'status_label'
