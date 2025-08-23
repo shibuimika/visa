@@ -57,7 +57,7 @@ export default function ScoutPage() {
   return (
     <>
       <Head>
-        <title>{`${t('scout')} | ${t('local_demo')}`}</title>
+        <title>{`${t('scout')} - ${t('app_title')}`}</title>
       </Head>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <Header currentPage="scout" />

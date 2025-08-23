@@ -9,7 +9,7 @@ export default function VisaPage() {
   return (
     <>
       <Head>
-        <title>{`${t('visa_application')} | ${t('local_demo')}`}</title>
+        <title>{`${t('visa_application')} - ${t('app_title')}`}</title>
       </Head>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <Header currentPage="visa" />

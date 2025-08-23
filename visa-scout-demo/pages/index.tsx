@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>{`${t('app_title')} | ${t('local_demo')}`}</title>
+        <title>{t('app_title')} - VISA申請からキャリアマッチングまで</title>
       </Head>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <Header currentPage="home" />
