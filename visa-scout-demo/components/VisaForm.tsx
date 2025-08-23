@@ -4,6 +4,7 @@ import type { TranslationKey } from '@/lib/i18n';
 import { submitVisaApplication } from '@/lib/fakeApi';
 import { ALL_COUNTRY_CODES } from '@/lib/countries';
 import Toast from '@/components/Toast';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 
 
@@ -220,7 +221,8 @@ export default function VisaForm() {
         setForm((prev) => ({ ...prev, [name]: value }));
       }
     },
-    [t]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const handleFileChange = useCallback(
