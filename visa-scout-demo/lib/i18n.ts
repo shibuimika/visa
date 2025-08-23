@@ -237,6 +237,28 @@ export type TranslationKey =
   | 'placeholder_work_experience'
   | 'placeholder_company_email'
 
+  // ファイルアップロード関連
+  | 'file_select_text'
+  | 'no_file_selected'
+  | 'demo_file_disabled'
+
+  // UIテキスト
+  | 'submitting_text'
+  | 'view_scout_button'
+
+  // 日付入力関連
+  | 'date_format_hint'
+
+  // 動的フィールドの値（翻訳版）
+  | 'employment_regular'
+  | 'employment_researcher'
+  | 'employment_exchange'
+  | 'employment_auditor'
+  | 'scholarship_yes'
+  | 'scholarship_no'
+  | 'living_together'
+  | 'living_separate'
+
   // セレクトオプション
   | 'select_category'
   | 'select_employment_type'
@@ -596,42 +618,74 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     company_contact_label: '所属企業担当者メール（任意）',
     demo_saved_message: '申請内容を保存しました（デモ）',
 
+    // ファイルアップロード関連
+    file_select_text: 'ファイルを選択',
+    no_file_selected: 'ファイルが選択されていません',
+    demo_file_disabled: 'デモのため利用不可',
+
+    // UIテキスト
+    submitting_text: '送信中...',
+    view_scout_button: 'スカウトを見る',
+
+    // 日付入力関連
+    date_format_hint: '例：1990-01-01',
+    date_placeholder: '年/月/日',
+
+    // 動的フィールドの値（翻訳版）
+    employment_regular: '正規',
+    employment_researcher: '研究生',
+    employment_exchange: '交換留学生',
+    employment_auditor: '旁听生',
+    scholarship_yes: '有',
+    scholarship_no: '無',
+    living_together: '同居',
+    living_separate: '別居',
+
     // プレースホルダー
-    placeholder_year_income: 'e.g., Annual Salary (in 10,000 yen)',
-    placeholder_employee_count: 'e.g., 50',
-    placeholder_capital: 'e.g., Capital (in 10,000 yen)',
-    placeholder_work_experience: 'e.g., 5',
-    placeholder_company_email: 'e.g., contact@company.com',
+    placeholder_year_income: '例）年収（万円）',
+    placeholder_employee_count: '例）50',
+    placeholder_capital: '例）資本金（万円）',
+    placeholder_work_experience: '例）5',
+    placeholder_company_email: '例）contact@company.com',
 
     // セレクトオプション
-    select_category: 'Select category',
-    select_employment_type: 'Select employment type',
-    select_education_level: 'Select education level',
-    select_work_time: 'Select working hours',
-    select_enrollment_type: 'Select enrollment status',
-    select_scholarship: 'Please select',
-    select_living_arrangement: 'Please select',
-    option_fulltime: 'Full-time',
-    option_contract: 'Contract',
-    option_parttime: 'Part-time',
-    option_dispatch: 'Temporary',
-    option_freelance: 'Freelance',
-    option_regular: 'Regular',
-    option_researcher: 'Research Student',
-    option_exchange: 'Exchange Student',
-    option_auditor: 'Auditor',
-    option_yes: 'Yes',
-    option_no: 'No',
-    option_together: 'Living Together',
-    option_separate: 'Living Separately',
-    option_highschool: 'High School',
-    option_college: 'College',
-    option_bachelor: 'Bachelor\'s',
-    option_master: 'Master\'s',
-    option_phd: 'PhD',
-    option_fulltime_work: 'Full-time',
-    option_parttime_work: 'Part-time',
-    option_shift_work: 'Shift Work'
+    select_category: 'カテゴリを選択',
+    select_employment_type: '雇用形態を選択',
+    select_education_level: '学歴を選択',
+    select_work_time: '労働時間を選択',
+    select_enrollment_type: '在籍区分を選択',
+    select_scholarship: '選択してください',
+    select_living_arrangement: '選択してください',
+    option_fulltime: '正社員',
+    option_contract: '契約社員',
+    option_parttime: 'アルバイト',
+    option_dispatch: '派遣',
+    option_freelance: '業務委託',
+    option_regular: '正規',
+    option_researcher: '研究生',
+    option_exchange: '交換留学生',
+    option_auditor: '旁听生',
+    option_yes: '有',
+    option_no: '無',
+    option_together: '同居',
+    option_separate: '別居',
+    option_highschool: '高校',
+    option_college: '短大',
+    option_bachelor: '学士',
+    option_master: '修士',
+    option_phd: '博士',
+    option_fulltime_work: 'フルタイム',
+    option_parttime_work: 'パートタイム',
+    option_shift_work: 'シフト',
+
+    // 職務カテゴリ
+    job_category_engineer: 'エンジニア',
+    job_category_data: 'データ分析',
+    job_category_design: 'デザイン',
+    job_category_product: 'プロダクト',
+    job_category_sales: '営業',
+    job_category_backoffice: 'バックオフィス',
+    job_category_support: 'サポート'
   },
 
   en: {
@@ -910,6 +964,29 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     company_contact_label: 'Company Contact Email (Optional)',
     demo_saved_message: 'Application saved successfully (Demo)',
 
+    // ファイルアップロード関連
+    file_select_text: 'Select File',
+    no_file_selected: 'No file selected',
+    demo_file_disabled: 'Not available in demo',
+
+    // UIテキスト
+    submitting_text: 'Submitting...',
+    view_scout_button: 'View Scout',
+
+    // 日付入力関連
+    date_format_hint: 'e.g., 1990-01-01',
+    date_placeholder: 'Y/M/D',
+
+    // 動的フィールドの値（翻訳版）
+    employment_regular: 'Regular',
+    employment_researcher: 'Research Student',
+    employment_exchange: 'Exchange Student',
+    employment_auditor: 'Auditor',
+    scholarship_yes: 'Yes',
+    scholarship_no: 'No',
+    living_together: 'Living Together',
+    living_separate: 'Living Separately',
+
     // プレースホルダー
     placeholder_year_income: 'e.g., Annual Salary (in 10,000 yen)',
     placeholder_employee_count: 'e.g., 50',
@@ -945,7 +1022,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     option_phd: 'PhD',
     option_fulltime_work: 'Full-time',
     option_parttime_work: 'Part-time',
-    option_shift_work: 'Shift Work'
+    option_shift_work: 'Shift Work',
+
+    // 職務カテゴリ
+    job_category_engineer: 'Engineer',
+    job_category_data: 'Data Analysis',
+    job_category_design: 'Design',
+    job_category_product: 'Product',
+    job_category_sales: 'Sales',
+    job_category_backoffice: 'Back Office',
+    job_category_support: 'Support'
   },
 
   zh: {
@@ -1224,6 +1310,29 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     company_contact_label: '所属企业负责人邮箱（可选）',
     demo_saved_message: '申请内容已保存（演示）',
 
+    // ファイルアップロード関連
+    file_select_text: '选择文件',
+    no_file_selected: '未选择文件',
+    demo_file_disabled: '演示模式不可用',
+
+    // UIテキスト
+    submitting_text: '提交中...',
+    view_scout_button: '查看人才发掘',
+
+    // 日付入力関連
+    date_format_hint: '例如：1990-01-01',
+    date_placeholder: '年/月/日',
+
+    // 動的フィールドの値（翻訳版）
+    employment_regular: '正规',
+    employment_researcher: '研究生',
+    employment_exchange: '交换留学生',
+    employment_auditor: '旁听生',
+    scholarship_yes: '有',
+    scholarship_no: '无',
+    living_together: '同居',
+    living_separate: '别居',
+
     // プレースホルダー
     placeholder_year_income: '例如：年收入（万日元）',
     placeholder_employee_count: '例如：50',
@@ -1259,7 +1368,16 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     option_phd: '博士',
     option_fulltime_work: '全职',
     option_parttime_work: '兼职',
-    option_shift_work: '轮班'
+    option_shift_work: '轮班',
+
+    // 職務カテゴリ
+    job_category_engineer: '工程师',
+    job_category_data: '数据分析',
+    job_category_design: '设计',
+    job_category_product: '产品',
+    job_category_sales: '销售',
+    job_category_backoffice: '后台',
+    job_category_support: '支持'
   }
 };
 

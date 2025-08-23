@@ -7,84 +7,107 @@ import Toast from '@/components/Toast';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 
-const visaKinds: VisaKind[] = ['留学', '技術・人文知識・国際業務', '家族滞在', '日本人の配偶者等', '経営・管理'];
-const jlptLevels: JLPT[] = ['N1', 'N2', 'N3', 'N4', 'N5', '未取得'];
+// VISA種類の定義（翻訳キー対応）
+const VISA_KIND_KEYS = ['visa_type_student', 'visa_type_work', 'visa_type_family', 'visa_type_spouse', 'visa_type_business'] as const;
 
-// 共通項目
-const COMMON = ['氏名','国籍','在留資格','在留期限','日本語レベル（JLPT）'] as const;
+// JLPTレベルの定義（翻訳キー対応）
+const JLPT_LEVEL_KEYS = ['jlpt_n1', 'jlpt_n2', 'jlpt_n3', 'jlpt_n4', 'jlpt_n5', 'jlpt_none'] as const;
 
-// 都道府県 - 翻訳キーマッピング
-const PREFECTURE_MAPPINGS = [
-  { key: 'prefecture_hokkaido', value: '北海道' },
-  { key: 'prefecture_aomori', value: '青森県' },
-  { key: 'prefecture_iwate', value: '岩手県' },
-  { key: 'prefecture_miyagi', value: '宮城県' },
-  { key: 'prefecture_akita', value: '秋田県' },
-  { key: 'prefecture_yamagata', value: '山形県' },
-  { key: 'prefecture_fukushima', value: '福島県' },
-  { key: 'prefecture_ibaraki', value: '茨城県' },
-  { key: 'prefecture_tochigi', value: '栃木県' },
-  { key: 'prefecture_gunma', value: '群馬県' },
-  { key: 'prefecture_saitama', value: '埼玉県' },
-  { key: 'prefecture_chiba', value: '千葉県' },
-  { key: 'prefecture_tokyo', value: '東京都' },
-  { key: 'prefecture_kanagawa', value: '神奈川県' },
-  { key: 'prefecture_niigata', value: '新潟県' },
-  { key: 'prefecture_toyama', value: '富山県' },
-  { key: 'prefecture_ishikawa', value: '石川県' },
-  { key: 'prefecture_fukui', value: '福井県' },
-  { key: 'prefecture_yamanashi', value: '山梨県' },
-  { key: 'prefecture_nagano', value: '長野県' },
-  { key: 'prefecture_gifu', value: '岐阜県' },
-  { key: 'prefecture_shizuoka', value: '静岡県' },
-  { key: 'prefecture_aichi', value: '愛知県' },
-  { key: 'prefecture_mie', value: '三重県' },
-  { key: 'prefecture_shiga', value: '滋賀県' },
-  { key: 'prefecture_kyoto', value: '京都府' },
-  { key: 'prefecture_osaka', value: '大阪府' },
-  { key: 'prefecture_hyogo', value: '兵庫県' },
-  { key: 'prefecture_nara', value: '奈良県' },
-  { key: 'prefecture_wakayama', value: '和歌山県' },
-  { key: 'prefecture_tottori', value: '鳥取県' },
-  { key: 'prefecture_shimane', value: '島根県' },
-  { key: 'prefecture_okayama', value: '岡山県' },
-  { key: 'prefecture_hiroshima', value: '広島県' },
-  { key: 'prefecture_yamaguchi', value: '山口県' },
-  { key: 'prefecture_tokushima', value: '徳島県' },
-  { key: 'prefecture_kagawa', value: '香川県' },
-  { key: 'prefecture_ehime', value: '愛媛県' },
-  { key: 'prefecture_kochi', value: '高知県' },
-  { key: 'prefecture_fukuoka', value: '福岡県' },
-  { key: 'prefecture_saga', value: '佐賀県' },
-  { key: 'prefecture_nagasaki', value: '長崎県' },
-  { key: 'prefecture_kumamoto', value: '熊本県' },
-  { key: 'prefecture_oita', value: '大分県' },
-  { key: 'prefecture_miyazaki', value: '宮崎県' },
-  { key: 'prefecture_kagoshima', value: '鹿児島県' },
-  { key: 'prefecture_okinawa', value: '沖縄県' }
-];
+// 都道府県の翻訳キー一覧
+const PREFECTURE_KEYS = [
+  'prefecture_hokkaido',
+  'prefecture_aomori',
+  'prefecture_iwate',
+  'prefecture_miyagi',
+  'prefecture_akita',
+  'prefecture_yamagata',
+  'prefecture_fukushima',
+  'prefecture_ibaraki',
+  'prefecture_tochigi',
+  'prefecture_gunma',
+  'prefecture_saitama',
+  'prefecture_chiba',
+  'prefecture_tokyo',
+  'prefecture_kanagawa',
+  'prefecture_niigata',
+  'prefecture_toyama',
+  'prefecture_ishikawa',
+  'prefecture_fukui',
+  'prefecture_yamanashi',
+  'prefecture_nagano',
+  'prefecture_gifu',
+  'prefecture_shizuoka',
+  'prefecture_aichi',
+  'prefecture_mie',
+  'prefecture_shiga',
+  'prefecture_kyoto',
+  'prefecture_osaka',
+  'prefecture_hyogo',
+  'prefecture_nara',
+  'prefecture_wakayama',
+  'prefecture_tottori',
+  'prefecture_shimane',
+  'prefecture_okayama',
+  'prefecture_hiroshima',
+  'prefecture_yamaguchi',
+  'prefecture_tokushima',
+  'prefecture_kagawa',
+  'prefecture_ehime',
+  'prefecture_kochi',
+  'prefecture_fukuoka',
+  'prefecture_saga',
+  'prefecture_nagasaki',
+  'prefecture_kumamoto',
+  'prefecture_oita',
+  'prefecture_miyazaki',
+  'prefecture_kagoshima',
+  'prefecture_okinawa'
+] as const;
 
-// VISA種類別の動的項目マッピング
-const VISA_FIELDS: Record<VisaKind, string[]> = {
-  '技術・人文知識・国際業務': [
-    '所属機関名','所在地','雇用形態','職務内容','就労場所','予定年収','労働時間','最終学歴','関連職務年数'
+// VISA種類別の動的項目マッピング（翻訳キー対応）
+const VISA_FIELD_KEYS: Record<string, string[]> = {
+  'visa_type_student': [
+    'field_学校名',
+    'field_学部学科_課程',
+    'field_在籍区分（正規/研究生等）',
+    'field_在学期間',
+    'field_奨学金の有無'
   ],
-  '経営・管理': [
-    '会社名','事業所所在地','資本金/出資総額','常勤職員数','法人番号','事業概要','事業開始状況'
+  'visa_type_work': [
+    'field_所属機関名',
+    'field_所在地',
+    'field_雇用形態',
+    'field_職務内容',
+    'field_就労場所',
+    'field_予定年収',
+    'field_労働時間',
+    'field_最終学歴',
+    'field_関連職務年数'
   ],
-  '留学': [
-    '学校名','学部学科/課程','在籍区分（正規/研究生等）','在学期間','奨学金の有無'
+  'visa_type_business': [
+    'field_会社名',
+    'field_事業所所在地',
+    'field_資本金_出資総額',
+    'field_常勤職員数',
+    'field_法人番号',
+    'field_事業概要',
+    'field_事業開始状況'
   ],
-  '日本人の配偶者等': [
-    '配偶者氏名（日本人）','婚姻日','同居状況'
+  'visa_type_spouse': [
+    'field_配偶者氏名（日本人）',
+    'field_婚姻日',
+    'field_同居状況'
   ],
-  '家族滞在': [
-    '扶養者氏名','扶養者の在留資格/期間','扶養者の勤務先/収入','同居予定住所'
+  'visa_type_family': [
+    'field_扶養者氏名',
+    'field_扶養者の在留資格_期間',
+    'field_扶養者の勤務先_収入',
+    'field_同居予定住所'
   ]
 };
 
 export default function VisaForm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [form, setForm] = useState<Application>({
     name: '',
     nationality: '',
@@ -92,7 +115,7 @@ export default function VisaForm() {
     gender: '',
     passportNumber: '',
     passportExpiry: '',
-    visaKind: '技術・人文知識・国際業務',
+    visaKind: 'visa_type_work', // 翻訳キー対応
     expiryDate: '',
     jlpt: 'N2',
     dynamicFields: {},
@@ -101,32 +124,61 @@ export default function VisaForm() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [lastId, setLastId] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: File[] }>({});
 
   // 国リスト（フォールバック）
   const [countries, setCountries] = useState<string[]>([]);
 
-  // ブラウザのIntl APIから地域コード一覧を取得し、日本語名へ変換
+  // ブラウザのIntl APIから地域コード一覧を取得し、現在の言語で表示名へ変換
   useEffect(() => {
     try {
       // @ts-expect-error: supportedValuesOf はモダンブラウザで利用可能
       const supported = typeof Intl.supportedValuesOf === 'function' ? (Intl.supportedValuesOf('region') as string[]) : null;
       const regionList = supported && supported.length > 0 ? supported : ALL_COUNTRY_CODES;
-      const dn = new Intl.DisplayNames(['ja'], { type: 'region' });
+
+      // 現在の言語で地域名を取得
+      const langCode = language === 'zh' ? 'zh-CN' : language; // 中国語の場合、zh-CNを使用
+      const dn = new Intl.DisplayNames([langCode], { type: 'region' });
       const names = regionList
         .map((code) => dn.of(code) || code)
-        .filter((n) => !!n && n !== '世界')
+        .filter((n) => !!n && n !== (language === 'en' ? 'World' : language === 'zh' ? '世界' : '世界'))
         .map((n) => String(n))
         .filter((v, i, a) => a.indexOf(v) === i)
-        .sort((a, b) => a.localeCompare(b, 'ja'));
+        .sort((a, b) => a.localeCompare(b, langCode));
+
       if (names.length > 0) {
         setCountries(names);
       } else {
-        setCountries(['日本','アメリカ合衆国','中国','韓国','台湾','イギリス','ドイツ','フランス','インド','ベトナム']);
+        // フォールバック：翻訳された国リスト
+        setCountries([
+          t('country_japan'),
+          t('country_usa'),
+          t('country_china'),
+          t('country_korea'),
+          t('country_taiwan'),
+          t('country_uk'),
+          t('country_germany'),
+          t('country_france'),
+          t('country_india'),
+          t('country_vietnam')
+        ]);
       }
     } catch {
-      setCountries(['日本','アメリカ合衆国','中国','韓国','台湾','イギリス','ドイツ','フランス','インド','ベトナム']);
+      // エラーフォールバック：翻訳された国リスト
+      setCountries([
+        t('country_japan'),
+        t('country_usa'),
+        t('country_china'),
+        t('country_korea'),
+        t('country_taiwan'),
+        t('country_uk'),
+        t('country_germany'),
+        t('country_france'),
+        t('country_india'),
+        t('country_vietnam')
+      ]);
     }
-  }, []);
+  }, [language, t]);
 
   const canSubmit = useMemo(() => {
     // 基本フィールドのチェック
@@ -135,20 +187,22 @@ export default function VisaForm() {
                       form.expiryDate.trim() !== '';
     
     // 現在表示されている動的フィールドのチェック
-    const currentFields = VISA_FIELDS[form.visaKind] || [];
-    const dynamicValid = currentFields.every((field) => {
+    const currentFieldKeys = VISA_FIELD_KEYS[form.visaKind] || [];
+    const dynamicValid = currentFieldKeys.every((fieldKey) => {
+      const fieldName = t(fieldKey as TranslationKey);
+
       // 特例: 在学期間は開始/終了の2つ
-      if (field === '在学期間') {
-        const start = (form.dynamicFields?.['在学期間（開始）'] || '').trim();
-        const end = (form.dynamicFields?.['在学期間（終了）'] || '').trim();
+      if (fieldKey === 'field_在学期間') {
+        const start = (form.dynamicFields?.[t('field_在学期間') + '（開始）'] || '').trim();
+        const end = (form.dynamicFields?.[t('field_在学期間') + '（終了）'] || '').trim();
         return start !== '' && end !== '';
       }
       // 特例: 職務内容はカテゴリ必須・詳細任意
-      if (field === '職務内容') {
-        const cat = (form.dynamicFields?.['職務内容（カテゴリ）'] || '').trim();
+      if (fieldKey === 'field_職務内容') {
+        const cat = (form.dynamicFields?.[t('field_職務内容') + '（カテゴリ）'] || '').trim();
         return cat !== '';
       }
-      const v = (form.dynamicFields?.[field] || '').trim();
+      const v = (form.dynamicFields?.[t(fieldKey as TranslationKey)] || '').trim();
       return v !== '';
     });
     
@@ -161,13 +215,27 @@ export default function VisaForm() {
       if (name.startsWith('dynamic_')) {
         // 動的フィールド
         const fieldName = name.replace('dynamic_', '');
-        setForm((prev) => ({ 
-          ...prev, 
+        setForm((prev) => ({
+          ...prev,
           dynamicFields: { ...prev.dynamicFields, [fieldName]: value }
         }));
       } else {
         // 通常フィールド
         setForm((prev) => ({ ...prev, [name]: value }));
+      }
+    },
+    []
+  );
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, fieldId: string) => {
+      const files = e.target.files;
+      if (files) {
+        const fileList = Array.from(files);
+        setSelectedFiles((prev) => ({
+          ...prev,
+          [fieldId]: fileList
+        }));
       }
     },
     []
@@ -252,10 +320,11 @@ export default function VisaForm() {
                   {t('birth_date')} <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="date"
+                  type="text"
                   name="birthDate"
                   value={form.birthDate}
                   onChange={handleChange}
+                  placeholder={t('date_placeholder')}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
@@ -329,13 +398,14 @@ export default function VisaForm() {
                 </svg>
 {t('passport_expiry_label')}
               </label>
-              <input
-                type="date"
-                name="passportExpiry"
-                value={form.passportExpiry}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              />
+                              <input
+                                type="text"
+                                name="passportExpiry"
+                                value={form.passportExpiry}
+                                onChange={handleChange}
+                                placeholder={t('date_placeholder')}
+                                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                              />
             </div>
           </div>
 
@@ -361,11 +431,11 @@ export default function VisaForm() {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                 >
-                  <option value="留学">{t('visa_type_student')}</option>
-                <option value="技術・人文知識・国際業務">{t('visa_type_work')}</option>
-                <option value="家族滞在">{t('visa_type_family')}</option>
-                <option value="日本人の配偶者等">{t('visa_type_spouse')}</option>
-                <option value="経営・管理">{t('visa_type_business')}</option>
+                  <option value="visa_type_student">{t('visa_type_student')}</option>
+                  <option value="visa_type_work">{t('visa_type_work')}</option>
+                  <option value="visa_type_family">{t('visa_type_family')}</option>
+                  <option value="visa_type_spouse">{t('visa_type_spouse')}</option>
+                  <option value="visa_type_business">{t('visa_type_business')}</option>
                 </select>
               </div>
               <div className="space-y-2">
@@ -376,10 +446,11 @@ export default function VisaForm() {
                   {t('visa_expiry')} <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="date"
+                  type="text"
                   name="expiryDate"
                   value={form.expiryDate}
                   onChange={handleChange}
+                  placeholder={t('date_placeholder')}
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
@@ -408,18 +479,17 @@ export default function VisaForm() {
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
               >
                 <option value="" disabled>{t('select_jlpt')}</option>
-                <option value="N1">{t('jlpt_n1')}</option>
-                <option value="N2">{t('jlpt_n2')}</option>
-                <option value="N3">{t('jlpt_n3')}</option>
-                <option value="N4">{t('jlpt_n4')}</option>
-                <option value="N5">{t('jlpt_n5')}</option>
-                <option value="未取得">{t('jlpt_none')}</option>
+                {JLPT_LEVEL_KEYS.map((jlptKey) => (
+                  <option key={jlptKey} value={jlptKey.replace('jlpt_', '').toUpperCase()}>
+                    {t(jlptKey as TranslationKey)}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
           {/* Dynamic Fields Section (VISA specific) */}
-          {VISA_FIELDS[form.visaKind] && VISA_FIELDS[form.visaKind].length > 0 && (
+          {VISA_FIELD_KEYS[form.visaKind] && VISA_FIELD_KEYS[form.visaKind].length > 0 && (
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -428,83 +498,73 @@ export default function VisaForm() {
                 {t('company_school_info')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {VISA_FIELDS[form.visaKind].map((field) => {
-                  // フィールド名を翻訳キーに対応させる
-                  const getFieldTranslationKey = (fieldName: string): string => {
-                    const keyMap: Record<string, string> = {
-                      '所属機関名': 'field_所属機関名',
-                      '所在地': 'field_所在地',
-                      '雇用形態': 'field_雇用形態',
-                      '職務内容': 'field_職務内容',
-                      '就労場所': 'field_就労場所',
-                      '予定年収': 'field_予定年収',
-                      '労働時間': 'field_労働時間',
-                      '最終学歴': 'field_最終学歴',
-                      '関連職務年数': 'field_関連職務年数',
-                      '会社名': 'field_会社名',
-                      '事業所所在地': 'field_事業所所在地',
-                      '資本金/出資総額': 'field_資本金_出資総額',
-                      '常勤職員数': 'field_常勤職員数',
-                      '法人番号': 'field_法人番号',
-                      '事業概要': 'field_事業概要',
-                      '事業開始状況': 'field_事業開始状況',
-                      '学校名': 'field_学校名',
-                      '学部学科/課程': 'field_学部学科_課程',
-                      '在籍区分（正規/研究生等）': 'field_在籍区分（正規/研究生等）',
-                      '在学期間': 'field_在学期間',
-                      '奨学金の有無': 'field_奨学金の有無',
-                      '配偶者氏名（日本人）': 'field_配偶者氏名（日本人）',
-                      '婚姻日': 'field_婚姻日',
-                      '同居状況': 'field_同居状況',
-                      '扶養者氏名': 'field_扶養者氏名',
-                      '扶養者の在留資格/期間': 'field_扶養者の在留資格_期間',
-                      '扶養者の勤務先/収入': 'field_扶養者の勤務先_収入',
-                      '同居予定住所': 'field_同居予定住所'
-                    };
-                    return keyMap[fieldName] || fieldName;
-                  };
+                {VISA_FIELD_KEYS[form.visaKind].map((fieldKey) => {
+                  const field = t(fieldKey as TranslationKey);
 
                   // セレクト候補
                   const SELECT_OPTIONS: Record<string, string[]> = {
-                    '雇用形態': [t('option_fulltime'), t('option_contract'), t('option_parttime'), t('option_dispatch'), t('option_freelance')],
-                    '在籍区分（正規/研究生等）': [t('option_regular'), t('option_researcher'), t('option_exchange'), t('option_auditor')],
-                    '奨学金の有無': [t('option_yes'), t('option_no')],
-                    '同居状況': [t('option_together'), t('option_separate')],
-                    '労働時間': [t('option_fulltime_work'), t('option_parttime_work'), t('option_shift_work')],
-                    '最終学歴': [t('option_highschool'), t('option_college'), t('option_bachelor'), t('option_master'), t('option_phd')]
+                    'field_雇用形態': [t('option_fulltime'), t('option_contract'), t('option_parttime'), t('option_dispatch'), t('option_freelance')],
+                    'field_在籍区分（正規/研究生等）': [t('employment_regular'), t('employment_researcher'), t('employment_exchange'), t('employment_auditor')],
+                    'field_奨学金の有無': [t('scholarship_yes'), t('scholarship_no')],
+                    'field_同居状況': [t('living_together'), t('living_separate')],
+                    'field_労働時間': [t('option_fulltime_work'), t('option_parttime_work'), t('option_shift_work')],
+                    'field_最終学歴': [t('option_highschool'), t('option_college'), t('option_bachelor'), t('option_master'), t('option_phd')]
+                  };
+
+                  // セレクトオプションのプレースホルダーテキスト
+                  const SELECT_PLACEHOLDERS: Record<string, string> = {
+                    'field_雇用形態': t('select_employment_type'),
+                    'field_在籍区分（正規/研究生等）': t('select_enrollment_type'),
+                    'field_奨学金の有無': t('select_scholarship'),
+                    'field_同居状況': t('select_living_arrangement'),
+                    'field_労働時間': t('select_work_time'),
+                    'field_最終学歴': t('select_education_level')
                   };
                   const NUMBER_HINTS: Record<string, { min?: number; max?: number; step?: number; placeholder?: string }> = {
-                    '予定年収': { min: 100, max: 2000, step: 10, placeholder: t('placeholder_year_income') },
-                    '常勤職員数': { min: 1, max: 100000, step: 1, placeholder: t('placeholder_employee_count') },
-                    '資本金/出資総額': { min: 1, max: 100000000, step: 1, placeholder: t('placeholder_capital') },
-                    '関連職務年数': { min: 0, max: 50, step: 1, placeholder: t('placeholder_work_experience') }
+                    'field_予定年収': { min: 100, max: 2000, step: 10, placeholder: t('placeholder_year_income') },
+                    'field_常勤職員数': { min: 1, max: 100000, step: 1, placeholder: t('placeholder_employee_count') },
+                    'field_資本金_出資総額': { min: 1, max: 100000000, step: 1, placeholder: t('placeholder_capital') },
+                    'field_関連職務年数': { min: 0, max: 50, step: 1, placeholder: t('placeholder_work_experience') }
                   };
-                  const DATE_FIELDS = new Set<string>(['婚姻日']);
-                  const PREF_FIELDS = new Set<string>(['所在地', '就労場所']);
+
+                  // フィールド別のプレースホルダーテキスト
+                  const FIELD_PLACEHOLDERS: Record<string, string> = {
+                    'field_所属機関名': t('placeholder_name'),
+                    'field_会社名': t('placeholder_name'),
+                    'field_学校名': t('placeholder_name'),
+                    'field_事業概要': t('placeholder_job_description'),
+                    'field_扶養者氏名': t('placeholder_name'),
+                    'field_扶養者の勤務先_収入': t('placeholder_job_description'),
+                    'field_同居予定住所': t('placeholder_name')
+                  };
+                  const DATE_FIELDS = new Set<string>(['field_婚姻日']);
+                  const PREF_FIELDS = new Set<string>(['field_所在地', 'field_就労場所']);
 
                   // 在学期間（開始/終了）の特別UI
-                  if (field === '在学期間') {
+                  if (fieldKey === 'field_在学期間') {
                     return (
                       <div key={field} className="space-y-2">
                         <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                          {field} <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <input
-                            type="date"
-                            name={`dynamic_在学期間（開始）`}
-                            value={form.dynamicFields?.['在学期間（開始）'] || ''}
+                            type="text"
+                            name={`dynamic_${t('field_在学期間')}（開始）`}
+                            value={form.dynamicFields?.[t('field_在学期間') + '（開始）'] || ''}
                             onChange={handleChange}
+                            placeholder={t('date_placeholder')}
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           />
                           <input
-                            type="date"
-                            name={`dynamic_在学期間（終了）`}
-                            value={form.dynamicFields?.['在学期間（終了）'] || ''}
+                            type="text"
+                            name={`dynamic_${t('field_在学期間')}（終了）`}
+                            value={form.dynamicFields?.[t('field_在学期間') + '（終了）'] || ''}
                             onChange={handleChange}
+                            placeholder={t('date_placeholder')}
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           />
                         </div>
@@ -513,21 +573,21 @@ export default function VisaForm() {
                   }
 
                   // 会社／学校名に簡易サジェスト
-                  if (field === '所属機関名' || field === '会社名' || field === '学校名') {
-                    const SUGGEST = field === '学校名'
+                  if (fieldKey === 'field_所属機関名' || fieldKey === 'field_会社名' || fieldKey === 'field_学校名') {
+                    const SUGGEST = fieldKey === 'field_学校名'
                       ? [
-                          { key: 'university_tokyo', value: '東京大学' },
-                          { key: 'university_waseda', value: '早稲田大学' },
-                          { key: 'university_keio', value: '慶應義塾大学' },
-                          { key: 'university_kyoto', value: '京都大学' },
-                          { key: 'university_osaka', value: '大阪大学' }
+                          { key: 'university_tokyo' },
+                          { key: 'university_waseda' },
+                          { key: 'university_keio' },
+                          { key: 'university_kyoto' },
+                          { key: 'university_osaka' }
                         ]
                       : [
-                          { key: 'company_acme', value: 'ACME KK' },
-                          { key: 'company_globex', value: 'Globex' },
-                          { key: 'company_soylent', value: 'Soylent' },
-                          { key: 'company_initech', value: 'Initech' },
-                          { key: 'company_piedpiper', value: 'Pied Piper' }
+                          { key: 'company_acme' },
+                          { key: 'company_globex' },
+                          { key: 'company_soylent' },
+                          { key: 'company_initech' },
+                          { key: 'company_piedpiper' }
                         ];
                     return (
                       <div key={field} className="space-y-2">
@@ -535,14 +595,14 @@ export default function VisaForm() {
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                          {field} <span className="text-red-500">*</span>
                         </label>
                         <input
                           list={`suggest_${field}`}
-                          name={`dynamic_${field}`}
-                          value={form.dynamicFields?.[field] || ''}
+                          name={`dynamic_${t((fieldKey as TranslationKey))}`}
+                          value={form.dynamicFields?.[t((fieldKey as TranslationKey))] || ''}
                           onChange={handleChange}
-                          placeholder={t('placeholder_company_email')}
+                          placeholder={FIELD_PLACEHOLDERS[fieldKey] || t('placeholder_name')}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         />
                         <datalist id={`suggest_${field}`}>
@@ -555,35 +615,43 @@ export default function VisaForm() {
                   }
 
                   // 職務内容: カテゴリ + 詳細フリーテキスト（カテゴリ必須）
-                  if (field === '職務内容') {
-                    const CATEGORIES = ['エンジニア', 'データ', 'デザイン', 'プロダクトマネジメント', '営業', 'バックオフィス', 'カスタマーサポート'];
+                  if (fieldKey === 'field_職務内容') {
+                    const CATEGORIES = [
+                      t('job_category_engineer'),
+                      t('job_category_data'),
+                      t('job_category_design'),
+                      t('job_category_product'),
+                      t('job_category_sales'),
+                      t('job_category_backoffice'),
+                      t('job_category_support')
+                    ];
                     return (
                       <div key={field} className="space-y-2">
                         <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                          {field} <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <select
-                            name={`dynamic_職務内容（カテゴリ）`}
-                            value={form.dynamicFields?.['職務内容（カテゴリ）'] || ''}
+                            name={`dynamic_${t('field_職務内容')}（カテゴリ）`}
+                            value={form.dynamicFields?.[t('field_職務内容') + '（カテゴリ）'] || ''}
                             onChange={handleChange}
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                           >
                             <option value="" disabled>{t('select_category')}</option>
-                            <option value="エンジニア">{t('job_category_engineer')}</option>
-                            <option value="データ">{t('job_category_data')}</option>
-                            <option value="デザイン">{t('job_category_design')}</option>
-                            <option value="プロダクトマネジメント">{t('job_category_product')}</option>
-                            <option value="営業">{t('job_category_sales')}</option>
-                            <option value="バックオフィス">{t('job_category_backoffice')}</option>
-                            <option value="カスタマーサポート">{t('job_category_support')}</option>
+                            <option value={t('job_category_engineer')}>{t('job_category_engineer')}</option>
+                            <option value={t('job_category_data')}>{t('job_category_data')}</option>
+                            <option value={t('job_category_design')}>{t('job_category_design')}</option>
+                            <option value={t('job_category_product')}>{t('job_category_product')}</option>
+                            <option value={t('job_category_sales')}>{t('job_category_sales')}</option>
+                            <option value={t('job_category_backoffice')}>{t('job_category_backoffice')}</option>
+                            <option value={t('job_category_support')}>{t('job_category_support')}</option>
                           </select>
                           <input
-                            name={`dynamic_職務内容（詳細）`}
-                            value={form.dynamicFields?.['職務内容（詳細）'] || ''}
+                            name={`dynamic_${t('field_職務内容')}（詳細）`}
+                            value={form.dynamicFields?.[t('field_職務内容') + '（詳細）'] || ''}
                             onChange={handleChange}
                             placeholder={t('placeholder_job_description')}
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
@@ -594,25 +662,25 @@ export default function VisaForm() {
                   }
 
                   // 都道府県セレクト
-                  if (PREF_FIELDS.has(field)) {
+                  if (PREF_FIELDS.has(fieldKey)) {
                     return (
                       <div key={field} className="space-y-2">
                         <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                           <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                           </svg>
-                          {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                          {field} <span className="text-red-500">*</span>
                         </label>
                         <select
-                          name={`dynamic_${field}`}
-                          value={form.dynamicFields?.[field] || ''}
+                          name={`dynamic_${t((fieldKey as TranslationKey))}`}
+                          value={form.dynamicFields?.[t((fieldKey as TranslationKey))] || ''}
                           onChange={handleChange}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                         >
                           <option value="" disabled>{t('select_prefecture')}</option>
-                          {PREFECTURE_MAPPINGS.map((pref) => (
-                            <option key={pref.value} value={pref.value}>
-                              {t(pref.key as TranslationKey)}
+                          {PREFECTURE_KEYS.map((prefKey) => (
+                            <option key={prefKey} value={t(prefKey as TranslationKey)}>
+                              {t(prefKey as TranslationKey)}
                             </option>
                           ))}
                         </select>
@@ -626,52 +694,53 @@ export default function VisaForm() {
                         <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
-                        {t(getFieldTranslationKey(field) as TranslationKey)} <span className="text-red-500">*</span>
+                        {field} <span className="text-red-500">*</span>
                       </label>
 
-                      {SELECT_OPTIONS[field] ? (
+                      {SELECT_OPTIONS[fieldKey] ? (
                         <select
-                          name={`dynamic_${field}`}
-                          value={form.dynamicFields?.[field] || ''}
+                          name={`dynamic_${t((fieldKey as TranslationKey))}`}
+                          value={form.dynamicFields?.[t((fieldKey as TranslationKey))] || ''}
                           onChange={handleChange}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                         >
-                          <option value="" disabled>{t('select_visa_type')}</option>
+                          <option value="" disabled>{SELECT_PLACEHOLDERS[fieldKey] || t('select_employment_type')}</option>
 
-                          {SELECT_OPTIONS[field].map((opt) => (
+                          {SELECT_OPTIONS[fieldKey].map((opt) => (
                             <option key={opt} value={opt}>
                               {opt}
                             </option>
                           ))}
                         </select>
-                      ) : DATE_FIELDS.has(field) ? (
+                      ) : DATE_FIELDS.has(fieldKey) ? (
                         <input
-                          type="date"
+                          type="text"
                           name={`dynamic_${field}`}
                           value={form.dynamicFields?.[field] || ''}
                           onChange={handleChange}
+                          placeholder={t('date_placeholder')}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         />
-                      ) : NUMBER_HINTS[field] ? (
+                      ) : NUMBER_HINTS[fieldKey] ? (
                         <input
                           type="number"
-                          name={`dynamic_${field}`}
-                          value={form.dynamicFields?.[field] || ''}
+                          name={`dynamic_${t((fieldKey as TranslationKey))}`}
+                          value={form.dynamicFields?.[t((fieldKey as TranslationKey))] || ''}
                           onChange={handleChange}
-                          min={NUMBER_HINTS[field].min}
-                          max={NUMBER_HINTS[field].max}
-                          step={NUMBER_HINTS[field].step}
-                          placeholder={NUMBER_HINTS[field].placeholder}
+                          min={NUMBER_HINTS[fieldKey].min}
+                          max={NUMBER_HINTS[fieldKey].max}
+                          step={NUMBER_HINTS[fieldKey].step}
+                          placeholder={NUMBER_HINTS[fieldKey].placeholder}
                           className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         />
                       ) : (
-                        <input
-                          name={`dynamic_${field}`}
-                          value={form.dynamicFields?.[field] || ''}
-                          onChange={handleChange}
-                          placeholder={t('placeholder_company_email')}
-                          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        />
+                                                  <input
+                            name={`dynamic_${t((fieldKey as TranslationKey))}`}
+                            value={form.dynamicFields?.[t((fieldKey as TranslationKey))] || ''}
+                            onChange={handleChange}
+                            placeholder={FIELD_PLACEHOLDERS[fieldKey] || t('placeholder_name')}
+                            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          />
                       )}
                     </div>
                   );
@@ -696,13 +765,31 @@ export default function VisaForm() {
                   </svg>
                   {t('proof_photo')}
                 </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 cursor-not-allowed"
-                />
-                <p className="text-xs text-gray-500">{t('demo_only')}</p>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled
+                    onChange={(e) => handleFileChange(e, 'proof_photo')}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 cursor-not-allowed flex items-center justify-between">
+                    <span className="text-gray-500">
+                      {selectedFiles['proof_photo'] && selectedFiles['proof_photo'].length > 0
+                        ? selectedFiles['proof_photo'].map(f => f.name).join(', ')
+                        : t('no_file_selected')
+                      }
+                    </span>
+                    <button
+                      type="button"
+                      disabled
+                      className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md cursor-not-allowed opacity-50"
+                    >
+                      {t('file_select_text')}
+                    </button>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500">{t('demo_file_disabled')}</p>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
@@ -711,13 +798,31 @@ export default function VisaForm() {
                   </svg>
                   {t('attachment_files')}
                 </label>
-                <input
-                  type="file"
-                  multiple
-                  disabled
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 cursor-not-allowed"
-                />
-                <p className="text-xs text-gray-500">{t('demo_only')}</p>
+                <div className="relative">
+                  <input
+                    type="file"
+                    multiple
+                    disabled
+                    onChange={(e) => handleFileChange(e, 'attachment_files')}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 cursor-not-allowed flex items-center justify-between">
+                    <span className="text-gray-500">
+                      {selectedFiles['attachment_files'] && selectedFiles['attachment_files'].length > 0
+                        ? selectedFiles['attachment_files'].map(f => f.name).join(', ')
+                        : t('no_file_selected')
+                      }
+                    </span>
+                    <button
+                      type="button"
+                      disabled
+                      className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md cursor-not-allowed opacity-50"
+                    >
+                      {t('file_select_text')}
+                    </button>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500">{t('demo_file_disabled')}</p>
               </div>
             </div>
           </div>
@@ -762,7 +867,7 @@ export default function VisaForm() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    送信中...
+                    {t('submitting_text')}
                   </>
                 ) : (
                   <>
@@ -781,7 +886,7 @@ export default function VisaForm() {
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
                   </svg>
-                  スカウトを見る
+                  {t('view_scout_button')}
                 </Link>
               )}
             </div>
