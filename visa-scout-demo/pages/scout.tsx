@@ -64,16 +64,16 @@ export default function ScoutPage() {
 
         {appToast && <Toast message={appToast} onClose={() => setAppToast(null)} />}
 
-        <main className="max-w-6xl mx-auto px-6 py-12">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+          <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
               </svg>
               {t('jlpt_visa_match')}
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('your_recommended_jobs')}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">{t('your_recommended_jobs')}</h2>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-xl sm:max-w-2xl mx-auto">
               {t('matching_application_info')}
             </p>
           </div>

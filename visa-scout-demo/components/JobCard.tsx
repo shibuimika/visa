@@ -17,9 +17,9 @@ export default function JobCard({ job, applied, onApply }: Props) {
   const { t, language } = useLanguage();
   const scored = (job as ScoredJob).score !== undefined ? (job as ScoredJob) : undefined;
   return (
-    <div className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden">
+    <div className="group bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden">
       {/* Header with gradient */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-gray-100">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 sm:p-5 lg:p-6 border-b border-gray-100">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
@@ -34,10 +34,10 @@ export default function JobCard({ job, applied, onApply }: Props) {
                 </div>
               )}
               <div>
-                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-200">
                   {job.title}
                 </h3>
-                <p className="text-gray-600 font-medium">{job.company}</p>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">{job.company}</p>
               </div>
             </div>
           </div>
