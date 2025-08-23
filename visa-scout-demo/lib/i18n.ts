@@ -256,6 +256,14 @@ export type TranslationKey =
   | 'submitting_text'
   | 'view_scout_button'
 
+  // 確認モーダル関連
+  | 'application_confirmation_title'
+  | 'application_confirmation_subtitle'
+  | 'confirmation_checkbox_text'
+  | 'back_to_form'
+  | 'confirm_application'
+  | 'application_accepted_message'
+
   // 日付入力関連
   | 'date_format_hint'
 
@@ -655,6 +663,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     submitting_text: '送信中...',
     view_scout_button: 'スカウトを見る',
 
+    // 確認モーダル関連
+    application_confirmation_title: '申請内容の確認',
+    application_confirmation_subtitle: '以下の内容で申請を行います。内容をご確認ください。',
+    confirmation_checkbox_text: 'この入力内容を元に求人スカウトを送って問題ないかを確認しました',
+    back_to_form: '戻る',
+    confirm_application: '申請する',
+    application_accepted_message: '申請を受け付けました（デモ）',
+
     // 日付入力関連
     date_format_hint: '例：1990-01-01',
     date_placeholder: '年/月/日',
@@ -1010,6 +1026,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     submitting_text: 'Submitting...',
     view_scout_button: 'View Scout',
 
+    // 確認モーダル関連
+    application_confirmation_title: 'Application Confirmation',
+    application_confirmation_subtitle: 'Please review your application details below.',
+    confirmation_checkbox_text: 'I have confirmed that it is okay to send job scouting based on this input',
+    back_to_form: 'Back',
+    confirm_application: 'Submit Application',
+    application_accepted_message: 'Application accepted (Demo)',
+
     // 日付入力関連
     date_format_hint: 'e.g., 1990-01-01',
     date_placeholder: 'Y/M/D',
@@ -1364,6 +1388,14 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     // UIテキスト
     submitting_text: '提交中...',
     view_scout_button: '查看人才发掘',
+
+    // 確認モーダル関連
+    application_confirmation_title: '申请内容确认',
+    application_confirmation_subtitle: '请确认以下申请内容。',
+    confirmation_checkbox_text: '我已确认可以根据此输入内容发送工作寻访',
+    back_to_form: '返回',
+    confirm_application: '提交申请',
+    application_accepted_message: '已接受申请（演示）',
 
     // 日付入力関連
     date_format_hint: '例如：1990-01-01',

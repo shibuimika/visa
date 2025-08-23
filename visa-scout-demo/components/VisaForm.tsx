@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import type { Application } from '@/lib/mockData';
 import type { TranslationKey } from '@/lib/i18n';
 import { submitVisaApplication } from '@/lib/fakeApi';
@@ -107,6 +108,7 @@ const VISA_FIELD_KEYS: Record<string, string[]> = {
 
 export default function VisaForm() {
   const { t, language } = useLanguage();
+  const router = useRouter();
   const [form, setForm] = useState<Application>({
     name: '',
     nationality: '',
@@ -124,6 +126,8 @@ export default function VisaForm() {
   const [toast, setToast] = useState<string | null>(null);
   const [lastId, setLastId] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: File[] }>({});
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [confirmationChecked, setConfirmationChecked] = useState(false);
 
   // 国リスト（フォールバック）
   const [countries, setCountries] = useState<string[]>([]);
@@ -221,7 +225,6 @@ export default function VisaForm() {
         setForm((prev) => ({ ...prev, [name]: value }));
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -239,11 +242,22 @@ export default function VisaForm() {
     []
   );
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+  // 確認モーダル表示
+  const handleShowConfirmation = useCallback(
+    (e: React.FormEvent) => {
       e.preventDefault();
       if (!canSubmit || loading) return;
+      setShowConfirmationModal(true);
+    },
+    [canSubmit, loading]
+  );
+
+  // 確認済みの申請送信
+  const handleConfirmedSubmit = useCallback(
+    async () => {
+      if (!confirmationChecked) return;
       setLoading(true);
+      setShowConfirmationModal(false);
       try {
         // ワンクリック保存：localStorageに保存
         if (typeof window !== 'undefined') {
@@ -252,16 +266,27 @@ export default function VisaForm() {
             localStorage.setItem('companyContact', form.companyContactEmail);
           }
         }
-        
+
         const res = await submitVisaApplication(form);
         setLastId(res.id);
-        setToast(t('demo_saved_message'));
+        setToast(t('application_accepted_message'));
+
+        // 少し待ってからスカウト画面に移動
+        setTimeout(() => {
+          router.push('/scout');
+        }, 1500);
       } finally {
         setLoading(false);
       }
     },
-    [canSubmit, form, loading, t]
+    [confirmationChecked, form, t, router]
   );
+
+  // モーダルを閉じる
+  const handleCloseModal = useCallback(() => {
+    setShowConfirmationModal(false);
+    setConfirmationChecked(false);
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -284,7 +309,7 @@ export default function VisaForm() {
 
       {/* Form Content */}
       <div className="bg-white rounded-b-2xl shadow-lg border border-gray-200 p-8">
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleShowConfirmation} className="space-y-8">
           
           {/* Personal Information Section */}
           <div>
@@ -899,6 +924,168 @@ export default function VisaForm() {
           </div>
         </form>
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">{t('application_confirmation_title')}</h3>
+                  <p className="text-gray-600 text-sm">{t('application_confirmation_subtitle')}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              {/* Application Data Display */}
+              <div className="space-y-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-gray-800">{t('basic_info')}</h4>
+                    <div className="space-y-1">
+                      <div className="flex justify-between py-1 border-b border-gray-100">
+                        <span className="text-gray-600">{t('name')}:</span>
+                        <span className="text-gray-900 font-medium">{form.name}</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-gray-100">
+                        <span className="text-gray-600">{t('nationality')}:</span>
+                        <span className="text-gray-900 font-medium">{form.nationality}</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-gray-100">
+                        <span className="text-gray-600">{t('birth_date')}:</span>
+                        <span className="text-gray-900 font-medium">{form.birthDate}</span>
+                      </div>
+                      {form.gender && (
+                        <div className="flex justify-between py-1 border-b border-gray-100">
+                          <span className="text-gray-600">{t('gender')}:</span>
+                          <span className="text-gray-900 font-medium">{t(form.gender as TranslationKey)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-gray-800">{t('visa_info')}</h4>
+                    <div className="space-y-1">
+                      <div className="flex justify-between py-1 border-b border-gray-100">
+                        <span className="text-gray-600">{t('visa_type')}:</span>
+                        <span className="text-gray-900 font-medium">{t(form.visaKind as TranslationKey)}</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-gray-100">
+                        <span className="text-gray-600">{t('visa_expiry')}:</span>
+                        <span className="text-gray-900 font-medium">{form.expiryDate}</span>
+                      </div>
+                      <div className="flex justify-between py-1 border-b border-gray-100">
+                        <span className="text-gray-600">{t('jlpt_level')}:</span>
+                        <span className="text-gray-900 font-medium">{form.jlpt}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dynamic Fields */}
+                {VISA_FIELD_KEYS[form.visaKind] && VISA_FIELD_KEYS[form.visaKind].length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-gray-800">{t('company_school_info')}</h4>
+                    <div className="grid grid-cols-1 gap-2 text-sm">
+                      {VISA_FIELD_KEYS[form.visaKind].map((fieldKey) => {
+                        const fieldName = t(fieldKey as TranslationKey);
+                        let displayValue = '';
+
+                        // 特別なフィールドの処理
+                        if (fieldKey === 'field_在学期間') {
+                          const start = form.dynamicFields?.[t('field_在学期間') + '（開始）'] || '';
+                          const end = form.dynamicFields?.[t('field_在学期間') + '（終了）'] || '';
+                          displayValue = start && end ? `${start} - ${end}` : '';
+                        } else if (fieldKey === 'field_職務内容') {
+                          const category = form.dynamicFields?.[t('field_職務内容') + '（カテゴリ）'] || '';
+                          const detail = form.dynamicFields?.[t('field_職務内容') + '（詳細）'] || '';
+                          displayValue = category ? `${category}${detail ? ` - ${detail}` : ''}` : '';
+                        } else {
+                          displayValue = form.dynamicFields?.[t(fieldKey as TranslationKey)] || '';
+                        }
+
+                        return displayValue ? (
+                          <div key={fieldKey} className="flex justify-between py-1 border-b border-gray-100">
+                            <span className="text-gray-600">{fieldName}:</span>
+                            <span className="text-gray-900 font-medium text-right max-w-[60%] break-words">{displayValue}</span>
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Contact Email */}
+                {form.companyContactEmail && (
+                  <div className="flex justify-between py-1 border-b border-gray-100 text-sm">
+                    <span className="text-gray-600">{t('company_contact_label')}:</span>
+                    <span className="text-gray-900 font-medium">{form.companyContactEmail}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Confirmation Checkbox */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={confirmationChecked}
+                    onChange={(e) => setConfirmationChecked(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 mt-0.5"
+                  />
+                  <span className="text-sm text-gray-700 font-medium leading-relaxed">
+                    {t('confirmation_checkbox_text')}
+                  </span>
+                </label>
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="flex-1 px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-200 font-semibold"
+                >
+                  {t('back_to_form')}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmedSubmit}
+                  disabled={!confirmationChecked || loading}
+                  className="flex-1 px-6 py-3 rounded-lg text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {t('submitting_text')}
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                      </svg>
+                      {t('confirm_application')}
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
