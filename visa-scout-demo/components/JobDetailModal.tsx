@@ -38,7 +38,7 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
       { label: t('visa_type_label'), value: t(job.visaKind as TranslationKey) },
       { label: t('visa_sponsorship_label'), value: job.visaSponsorship ? t('option_yes') : job.visaSponsorship === false ? t('option_no') : undefined },
     ].filter((i) => i.value);
-  }, [job]);
+  }, [job, language, t]);
 
   if (!open || !job) return null;
 

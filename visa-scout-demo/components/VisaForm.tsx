@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Application, JLPT, VisaKind } from '@/lib/mockData';
+import type { Application } from '@/lib/mockData';
 import type { TranslationKey } from '@/lib/i18n';
 import { submitVisaApplication } from '@/lib/fakeApi';
 import { ALL_COUNTRY_CODES } from '@/lib/countries';
 import Toast from '@/components/Toast';
-import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 
-// VISA種類の定義（翻訳キー対応）
-const VISA_KIND_KEYS = ['visa_type_student', 'visa_type_work', 'visa_type_family', 'visa_type_spouse', 'visa_type_business'] as const;
+
 
 // JLPTレベルの定義（翻訳キー対応）
 const JLPT_LEVEL_KEYS = ['jlpt_n1', 'jlpt_n2', 'jlpt_n3', 'jlpt_n4', 'jlpt_n5', 'jlpt_none'] as const;
@@ -189,8 +187,6 @@ export default function VisaForm() {
     // 現在表示されている動的フィールドのチェック
     const currentFieldKeys = VISA_FIELD_KEYS[form.visaKind] || [];
     const dynamicValid = currentFieldKeys.every((fieldKey) => {
-      const fieldName = t(fieldKey as TranslationKey);
-
       // 特例: 在学期間は開始/終了の2つ
       if (fieldKey === 'field_在学期間') {
         const start = (form.dynamicFields?.[t('field_在学期間') + '（開始）'] || '').trim();
@@ -207,7 +203,7 @@ export default function VisaForm() {
     });
     
     return basicValid && dynamicValid;
-  }, [form]);
+  }, [form, t]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -224,7 +220,7 @@ export default function VisaForm() {
         setForm((prev) => ({ ...prev, [name]: value }));
       }
     },
-    []
+    [t]
   );
 
   const handleFileChange = useCallback(
@@ -262,7 +258,7 @@ export default function VisaForm() {
         setLoading(false);
       }
     },
-    [canSubmit, form, loading]
+    [canSubmit, form, loading, t]
   );
 
   return (
@@ -616,15 +612,6 @@ export default function VisaForm() {
 
                   // 職務内容: カテゴリ + 詳細フリーテキスト（カテゴリ必須）
                   if (fieldKey === 'field_職務内容') {
-                    const CATEGORIES = [
-                      t('job_category_engineer'),
-                      t('job_category_data'),
-                      t('job_category_design'),
-                      t('job_category_product'),
-                      t('job_category_sales'),
-                      t('job_category_backoffice'),
-                      t('job_category_support')
-                    ];
                     return (
                       <div key={field} className="space-y-2">
                         <label className="text-sm font-medium text-gray-700 flex items-center gap-2">

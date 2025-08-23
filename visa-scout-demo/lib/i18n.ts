@@ -61,6 +61,7 @@ export type TranslationKey =
   | 'select_visa_type'
   | 'select_jlpt'
   | 'select_prefecture'
+  | 'date_placeholder'
   | 'male'
   | 'female'
   | 'other'
