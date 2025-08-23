@@ -1,5 +1,6 @@
 import type { Job } from '@/lib/mockData';
 import type { ScoredJob } from '@/lib/fakeApi';
+import type { TranslationKey } from '@/lib/i18n';
 import { formatSalaryRange } from '@/lib/format';
 import Tag from '@/components/Tag';
 import MetaRow from '@/components/MetaRow';
@@ -88,7 +89,7 @@ export default function JobCard({ job, applied, onApply }: Props) {
               <p className="text-xs text-gray-500 font-medium">{t('visa_type_label')}</p>
               <div>
                 <Tag color="indigo" icon={<svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>}>
-                  {job.visaKind}
+                  {t(job.visaKind as TranslationKey)}
                 </Tag>
               </div>
             </div>

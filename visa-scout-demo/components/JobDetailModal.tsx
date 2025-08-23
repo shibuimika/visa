@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { formatRelative, formatSalaryRange } from '@/lib/format';
 import Tag from '@/components/Tag';
 import type { Job } from '@/lib/mockData';
+import type { TranslationKey } from '@/lib/i18n';
 import { useLanguage } from '@/lib/LanguageContext';
 import { translateLocation, translateEmploymentType } from '@/lib/locationUtils';
 
@@ -34,7 +35,7 @@ export default function JobDetailModal({ open, job, onClose, onApply, applied }:
       { label: t('holidays_label'), value: job.holidays },
       { label: t('work_language_label'), value: job.workLang },
       { label: t('japanese_read_speak_label'), value: job.readingLevel && job.speakingLevel ? `${job.readingLevel}/${job.speakingLevel}` : undefined },
-      { label: t('visa_type_label'), value: job.visaKind },
+      { label: t('visa_type_label'), value: t(job.visaKind as TranslationKey) },
       { label: t('visa_sponsorship_label'), value: job.visaSponsorship ? t('option_yes') : job.visaSponsorship === false ? t('option_no') : undefined },
     ].filter((i) => i.value);
   }, [job]);
