@@ -113,7 +113,7 @@ export const jobs: Job[] = [
     company: 'Soylent',
     salary: 600,
     jlpt: 'N2',
-    visaKind: '技術・人文知識・国際業務',
+    visaKind: 'visa_type_work',
     location: '東京都港区',
     employmentType: '正社員',
     benefits: ['フルリモート可', '在宅手当'],

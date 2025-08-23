@@ -677,16 +677,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     option_phd: '博士',
     option_fulltime_work: 'フルタイム',
     option_parttime_work: 'パートタイム',
-    option_shift_work: 'シフト',
-
-    // 職務カテゴリ
-    job_category_engineer: 'エンジニア',
-    job_category_data: 'データ分析',
-    job_category_design: 'デザイン',
-    job_category_product: 'プロダクト',
-    job_category_sales: '営業',
-    job_category_backoffice: 'バックオフィス',
-    job_category_support: 'サポート'
+    option_shift_work: 'シフト'
   },
 
   en: {
@@ -1023,16 +1014,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     option_phd: 'PhD',
     option_fulltime_work: 'Full-time',
     option_parttime_work: 'Part-time',
-    option_shift_work: 'Shift Work',
-
-    // 職務カテゴリ
-    job_category_engineer: 'Engineer',
-    job_category_data: 'Data Analysis',
-    job_category_design: 'Design',
-    job_category_product: 'Product',
-    job_category_sales: 'Sales',
-    job_category_backoffice: 'Back Office',
-    job_category_support: 'Support'
+    option_shift_work: 'Shift Work'
   },
 
   zh: {
@@ -1369,16 +1351,7 @@ export const translations: Record<Language, Record<TranslationKey, string>> = {
     option_phd: '博士',
     option_fulltime_work: '全职',
     option_parttime_work: '兼职',
-    option_shift_work: '轮班',
-
-    // 職務カテゴリ
-    job_category_engineer: '工程师',
-    job_category_data: '数据分析',
-    job_category_design: '设计',
-    job_category_product: '产品',
-    job_category_sales: '销售',
-    job_category_backoffice: '后台',
-    job_category_support: '支持'
+    option_shift_work: '轮班'
   }
 };
 
